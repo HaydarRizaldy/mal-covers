@@ -1,0 +1,35 @@
+name: Update covers
+
+on:
+  schedule:
+    - cron: "17 20 * * *"   # daily, 03:17 WIB
+  workflow_dispatch:         # "Run workflow" button for an instant refresh
+  push:
+    paths: [generate.py, .github/workflows/update.yml]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-covers
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python generate.py _HyZer covers.css
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- covers.css && git ls-files --error-unmatch covers.css >/dev/null 2>&1; then
+            echo "covers.css unchanged"; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add covers.css
+          git commit -m "Update covers"
+          git push
