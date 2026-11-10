@@ -108,7 +108,33 @@ body .list-menu-float:hover::after{transform:none}
 body #list-container::after{background:hsla(0,0%,0%,78%);opacity:0;will-change:opacity;transition:opacity var(--timeMenu) var(--bezierSmooth) var(--delayMenu)}
 body .list-menu-float:hover~#list-container::after{opacity:1;transition-delay:0s}
 body .list-unit .loading-space{pointer-events:none}
-@media (max-width:926px){body .list-block{padding-top:152px;padding-bottom:80px}body .list-unit .list-status-title .text{left:calc(238px - 50vw);width:calc(100vw - 40px)}}"""
+/* ENG / JP title slider next to Order. It reuses MAL's hidden "Stats" button (#show-stats-button):
+   its <i> = ENG half, the link's ::before = JP half, ::after = the sliding knob. No JS, so the choice is a
+   CSS latch on a registered number --en (0 = JP, 1 = ENG): clicking a half sets it at once, and the way back
+   is delayed a day, so it holds. It inherits, so cards MAL loads later follow it. Not remembered on reload.
+   (Nested :has() is invalid, so JP = "link active" and ENG wins by specificity when its <i> is active.) */
+@property --en{syntax:'<number>';inherits:true;initial-value:0}
+body{--en:0;transition:--en 0s 86400s}
+body:has(#show-stats-button:active){--en:0;transition:none}
+body:has(#show-stats-button i:active){--en:1;transition:none}
+body .data.title .link{font-size:calc(13px - 13px * var(--en) * var(--hasEn,0)) !important}
+body .data.title .link::before{content:var(--tEn,"");font-size:calc(13px * var(--en))}
+body .list-unit .list-status-title .stats{display:block}
+body .list-unit .list-status-title .stats #show-stats-button{position:absolute;top:0;left:calc(178px + 0.07 * (var(--listW) - 980px));display:flex !important;align-items:stretch;width:104px;height:32px;padding:0;margin:0;background:hsl(var(--btn)) !important;border:2px solid hsl(var(--btn));border-radius:16px;box-shadow:-0.5px 0.7px 2.1px hsla(0,0%,0%,35%);font-size:0;isolation:isolate;cursor:pointer;transition:border-color var(--timeButton) var(--bezierFast)}
+body .list-unit .list-status-title .stats #show-stats-button:hover{border-color:hsl(var(--btnAccent))}
+body #show-stats-button i,body #show-stats-button::before{flex:1;display:flex;align-items:center;justify-content:center;font:normal 11px/1 var(--font);letter-spacing:1px;transition:color var(--timeButtonLarge) var(--bezierSmooth)}
+body #show-stats-button i{order:0;color:color-mix(in srgb,hsl(var(--bg)) calc(var(--en) * 100%),hsla(var(--text),80%))}
+body #show-stats-button i::before{content:"ENG";font:inherit}
+body #show-stats-button::before{content:"JP";order:1;color:color-mix(in srgb,hsl(var(--bg)) calc((1 - var(--en)) * 100%),hsla(var(--text),80%))}
+body #show-stats-button::after{content:"";position:absolute;top:2px;left:2px;z-index:-1;width:calc(50% - 4px);height:calc(100% - 4px);background:hsl(var(--accent));border-radius:12px;transform:translateX(calc((1 - var(--en)) * (100% + 4px)));transition:transform var(--timeButtonLarge) var(--bezierSmooth)}
+/* at mid widths the centred tab row would run into the slider: fit it into the free space between the slider
+   and the search box (computed per --listW breakpoint: 910px -> ~405px free, 1133.5px -> ~597px; both centred +56px) */
+@media (min-width:927px) and (max-width:1150.4px){body #status-menu:not(.fixed) .status-menu{position:relative;left:56px;width:400px}body #status-menu:not(.fixed) .status-button{padding:0 5px}body #status-menu:not(.fixed) .status-button::before{font-size:13px}}
+@media (min-width:1150.5px) and (max-width:1373.9px){body #status-menu:not(.fixed) .status-menu{position:relative;left:56px;width:585px}}
+/* MAL's own click handler slides the footer stats up/down: neutralise it */
+body .list-unit .list-stats{height:auto !important;overflow:visible !important;padding-top:0 !important;padding-bottom:0 !important;margin-top:0 !important;margin-bottom:0 !important}
+@media (max-width:926px){body .list-block{padding-top:152px;padding-bottom:80px}body .list-unit .list-status-title .text{left:calc(238px - 50vw);width:calc(100vw - 40px)}
+body .list-unit .list-status-title .stats #show-stats-button{left:186px}body #status-menu .search-container{left:calc(50% + 81px);width:137px}}"""
 
 
 def get(url, as_json=False):
@@ -176,7 +202,7 @@ def score_chart(scores):
 
 
 def main():
-    rules, per_entry, lists = [], [], []
+    rules, per_entry, lists, titles = [], [], [], []
     cutoff = max(time.time() - UPDATED_DAYS * 86400, UPDATED_NOT_BEFORE)
     for kind in ("anime", "manga"):
         items = entries(kind)
@@ -202,6 +228,11 @@ def main():
                     props.append('--topLabel:"\\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible')
             if props:
                 per_entry.append(f".list-item:has({link}){{{';'.join(props)}}}")
+            # English title for the ENG/JP slider (targets the title link directly: no :has needed)
+            jp = str(it.get(f"{kind}_title") or "").strip()
+            en = str(it.get("anime_title_eng" if kind == "anime" else "manga_english") or "").strip()
+            if en and en != jp:
+                titles.append(f'.data.title a[href^="/{kind}/{it[kind + "_id"]}/"]{{--tEn:{css_string(en)};--hasEn:1}}')
         scored = [it["score"] for it in items if it.get("score")]
         chart, counts = score_chart(scored)
         st = stats_text(kind)
@@ -219,6 +250,7 @@ def main():
         + "/* tag colours (icon only) */\n" + tags + "\n"
         + "\n".join(lists) + "\n"
         + "".join(p + "\n" for p in per_entry)
+        + "/* English titles for the ENG/JP slider */\n" + "".join(t + "\n" for t in titles)
     )
     old = open(OUT, encoding="utf-8").read() if __import__("os").path.exists(OUT) else ""
     # ignore the header comment (it holds the build date) when deciding whether anything changed
