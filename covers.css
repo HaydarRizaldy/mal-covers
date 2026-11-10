@@ -1,5 +1,5 @@
 @charset "UTF-8";
-/* Sharper covers for MAL user _HyZer - 576 entries, built 2026-11-10 by github.com/HaydarRizaldy/mal-covers */
+/* Sharper covers + theme extras for MAL user _HyZer - 576 covers, built 2026-11-10 by github.com/HaydarRizaldy/mal-covers */
 .data.image a[href^="/anime/57/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/11/11636.webp)}
 .data.image a[href^="/anime/199/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/6/79597.webp)}
 .data.image a[href^="/anime/226/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/1780/121555.webp)}
@@ -589,9 +589,272 @@
 [data-query*='"status":7'] .list-item:not(:hover):has(.data.status[class*="planto"]) .data.image{filter:saturate(.3) brightness(.62)}
 /* UPDATED chip under the #number for recently changed entries */
 .data.image::after{content:var(--updated,none);position:absolute;top:33px;left:12px;z-index:2;padding:1px 6px;background:hsl(var(--accent));border-radius:3px;box-shadow:0 1px 4px hsla(0,0%,0%,50%);color:hsl(var(--bg));font:bold 9.5px/14px var(--font);letter-spacing:1px}
-/* list stats above the footer: highlight on hover like the copyright line */
+/* your score vs MAL, in the hover info: "+2.6 above" / "MAL: 7.40" (per-entry --diff / --diffColor) */
+body .data.mal_score::before{content:var(--diff,"") "MAL: ";color:hsl(var(--diffColor,var(--text)));white-space:pre-line}
+/* PLANNED tab: show MAL score + season on the card face instead of the word "Planned" */
+[data-query*='"status":6'] .list-item .data.score{display:none}
+[data-query*='"status":6'] .list-item .data.mal_score,.anime[data-query*='"status":6'] .list-item .data.season{position:absolute;left:12px;z-index:10;max-width:calc(100% - 70px);margin:0;opacity:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+[data-query*='"status":6'] .list-item .data.mal_score{bottom:12px}
+.anime[data-query*='"status":6'] .list-item .data.season{bottom:29px}
+.anime[data-query*='"status":6'] .list-item .data.title{padding-bottom:44px !important}
+/* footer: stats line highlights on hover like the copyright; score chart before it; MAL's "More stats" link (full table) shown */
 #footer-block{pointer-events:none}
 #footer-block #copyright{pointer-events:auto}
 .list-unit .list-stats{transition:color var(--timeText) var(--bezierFast)}
 .list-unit .list-stats:hover{color:hsla(var(--text),100%)}
-.list-item:has(.data.image a[href^="/anime/37021/"]){--updated:"UPDATED"}
+.list-unit .list-stats::before{content:var(--chartLabel,none);display:inline-block;margin-right:14px;padding-right:110px;background:var(--scoreChart) right center/100px 14px no-repeat}
+body .list-unit .list-stats a.floatRightHeader{display:inline;float:none;margin-left:12px;padding:0;color:inherit;font-size:inherit}
+body .list-unit .list-stats a.floatRightHeader:hover{color:hsl(var(--textLinkHov))}
+/* stats line also at the top, under the tabs (text from MAL's footer line, refreshed daily) */
+body .list-block{padding-top:88px}
+body .list-unit .list-status-title .text{position:absolute;top:42px;left:0;display:block;width:calc(var(--listW) - 40px);height:16px;overflow:hidden;color:hsla(var(--text),40%);font-size:0;text-align:center;white-space:nowrap;pointer-events:auto;cursor:default;transition:color var(--timeText) var(--bezierFast)}
+body .list-unit .list-status-title .text::before{content:var(--statsText,none);font:12px/16px var(--font)}
+body .list-unit .list-status-title .text:hover{color:hsla(var(--text),100%)}
+@media (max-width:926px){body .list-block{padding-top:132px}body .list-unit .list-status-title .text{width:436px}}
+/* tag colours (icon only) */
+body .data.tags span a[href$="tag=Romance"]::after{color:#3987e5}
+body .data.tags span a[href$="tag=Comedy"]::after{color:#d95926}
+body .data.tags span a[href$="tag=School"]::after{color:#199e70}
+body .data.tags span a[href$="tag=Shounen"]::after{color:#c98500}
+body .data.tags span a[href$="tag=Seinen"]::after{color:#d55181}
+body .data.tags span a[href$="tag=Drama"]::after{color:#008300}
+body .data.tags span a[href$="tag=Ecchi"]::after{color:#9085e9}
+body .data.tags span a[href$="tag=Action"]::after{color:#e66767}
+body.anime{--scoreChart:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%2214%22 viewBox=%220 0 100 14%22%3E%3Cg fill=%22hsl%28240,25%25,75%25%29%22%3E%3Crect x=%220%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2210%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2220%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2230%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2240%22 y=%2211%22 width=%228%22 height=%223%22 rx=%221.5%22/%3E%3Crect x=%2250%22 y=%228%22 width=%228%22 height=%226%22 rx=%221.5%22/%3E%3Crect x=%2260%22 y=%221%22 width=%228%22 height=%2213%22 rx=%221.5%22/%3E%3Crect x=%2270%22 y=%225%22 width=%228%22 height=%229%22 rx=%221.5%22/%3E%3Crect x=%2280%22 y=%229%22 width=%228%22 height=%225%22 rx=%221.5%22/%3E%3Crect x=%2290%22 y=%226%22 width=%228%22 height=%228%22 rx=%221.5%22/%3E%3C/g%3E%3C/svg%3E");--chartLabel:"Scores 1\2013 10";--statsText:"TV: 415, OVA: 29, Movies: 52, Spcl.: 20, Eps: 2464, Days: 40.98, Mean Score: 7.6, Score Dev.: 0.07"}
+body.manga{--chartLabel:none;--statsText:"Chapters: 0, Volumes: 0, Days: 0, Mean Score: 0.0, Score Dev.: 0.00"}
+.list-item:has(.data.image a[href^="/anime/199/"]){--diff:"+0.2 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/245/"]){--diff:"\2212 1.7 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/431/"]){--diff:"\2212 0.7 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/1535/"]){--diff:"\2212 0.6 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/3455/"]){--diff:"\00B1 0 same as\A ";--diffColor:var(--planned)}
+.list-item:has(.data.image a[href^="/anime/4224/"]){--diff:"\00B1 0 same as\A ";--diffColor:var(--planned)}
+.list-item:has(.data.image a[href^="/anime/6045/"]){--diff:"\2212 3.0 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/8676/"]){--diff:"\2212 1.3 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/8861/"]){--diff:"\2212 2.0 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/9919/"]){--diff:"\2212 2.5 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/11235/"]){--diff:"\2212 1.4 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/11499/"]){--diff:"\2212 0.3 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/11617/"]){--diff:"\2212 0.3 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/11757/"]){--diff:"\2212 3.2 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/11827/"]){--diff:"\2212 1.4 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/11887/"]){--diff:"+1.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/12531/"]){--diff:"+1.7 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/13759/"]){--diff:"+2.0 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/14813/"]){--diff:"+2.0 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/15451/"]){--diff:"\2212 0.5 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/15583/"]){--diff:"\2212 2.1 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/16001/"]){--diff:"+1.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/16498/"]){--diff:"+1.4 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/18277/"]){--diff:"+1.0 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/18397/"]){--diff:"\2212 0.9 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/18897/"]){--diff:"+1.4 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/20507/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/20767/"]){--diff:"\2212 0.7 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/20785/"]){--diff:"\2212 0.4 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/21863/"]){--diff:"\2212 1.1 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/22535/"]){--diff:"+1.7 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/22729/"]){--diff:"+0.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/23233/"]){--diff:"\2212 1.7 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/23273/"]){--diff:"\2212 2.6 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/23277/"]){--diff:"+0.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/23755/"]){--diff:"+0.4 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/23847/"]){--diff:"+1.8 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/24227/"]){--diff:"\2212 1.4 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/24405/"]){--diff:"\2212 6.6 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/24475/"]){--diff:"\2212 0.1 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/24703/"]){--diff:"\2212 0.4 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/24833/"]){--diff:"+1.9 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/25777/"]){--diff:"+1.4 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/25781/"]){--diff:"\2212 0.4 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/27655/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/28121/"]){--diff:"+0.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/28617/"]){--diff:"\2212 0.9 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/28851/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/29786/"]){--diff:"\2212 0.2 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/30015/"]){--diff:"\00B1 0 same as\A ";--diffColor:var(--planned)}
+.list-item:has(.data.image a[href^="/anime/30240/"]){--diff:"+1.4 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/30276/"]){--diff:"+1.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/30321/"]){--diff:"\2212 0.2 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/30503/"]){--diff:"+0.9 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/30727/"]){--diff:"+1.2 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/30831/"]){--diff:"\2212 0.1 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/30885/"]){--diff:"\2212 0.8 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/31240/"]){--diff:"+1.8 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/31722/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/32182/"]){--diff:"+1.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/32380/"]){--diff:"+0.2 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/32937/"]){--diff:"+0.8 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/33161/"]){--diff:"\2212 1.0 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/33286/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/33352/"]){--diff:"+1.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/33487/"]){--diff:"+0.2 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/34134/"]){--diff:"+2.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/34281/"]){--diff:"\2212 0.2 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/34577/"]){--diff:"+0.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/34626/"]){--diff:"\00B1 0 same as\A ";--diffColor:var(--planned)}
+.list-item:has(.data.image a[href^="/anime/34902/"]){--diff:"\2212 0.5 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/35413/"]){--diff:"\2212 6.2 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/35466/"]){--diff:"+0.8 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/35507/"]){--diff:"+1.2 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/35639/"]){--diff:"+1.8 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/35760/"]){--diff:"+1.4 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/35790/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/35849/"]){--diff:"+0.8 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/35968/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/36106/"]){--diff:"+0.2 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/36871/"]){--diff:"+0.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/36882/"]){--diff:"+0.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/36885/"]){--diff:"+1.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/37021/"]){--updated:"UPDATED";--diff:"+4.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/37210/"]){--diff:"+0.2 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/37347/"]){--diff:"+0.8 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/37450/"]){--diff:"\2212 0.2 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/37510/"]){--diff:"+1.2 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/37521/"]){--diff:"\2212 1.8 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/37982/"]){--diff:"\2212 2.6 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/37999/"]){--diff:"\2212 0.4 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/38000/"]){--diff:"+1.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/38101/"]){--diff:"\2212 0.6 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/38349/"]){--diff:"+1.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/38397/"]){--diff:"+0.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/38524/"]){--diff:"+0.9 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/38573/"]){--diff:"+0.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/38659/"]){--diff:"\2212 0.5 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/38778/"]){--diff:"\2212 0.7 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/39326/"]){--diff:"\2212 0.5 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/39535/"]){--diff:"+1.7 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/39547/"]){--diff:"+1.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/39587/"]){--diff:"+1.7 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/39701/"]){--diff:"+0.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/39783/"]){--diff:"\2212 1.0 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/39935/"]){--diff:"\2212 0.7 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/40010/"]){--diff:"\2212 0.4 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/40356/"]){--diff:"+0.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/40357/"]){--diff:"\2212 0.1 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/40453/"]){--diff:"+0.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/40454/"]){--diff:"+0.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/40507/"]){--diff:"\2212 0.1 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/40591/"]){--diff:"\2212 0.6 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/40748/"]){--diff:"\2212 0.5 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/40750/"]){--diff:"\2212 1.3 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/40787/"]){--diff:"+0.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/40839/"]){--diff:"+0.2 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/41025/"]){--diff:"+1.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/41389/"]){--diff:"+2.2 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/41457/"]){--diff:"+1.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/41623/"]){--diff:"+0.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/41710/"]){--diff:"\2212 0.2 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/41812/"]){--diff:"+0.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/41946/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/42203/"]){--diff:"+1.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/42310/"]){--diff:"\2212 0.6 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/42897/"]){--diff:"\2212 0.2 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/42963/"]){--diff:"+1.4 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/43608/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/43609/"]){--diff:"\2212 0.6 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/43969/"]){--diff:"+0.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/44511/"]){--diff:"\2212 0.4 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/44524/"]){--diff:"\2212 1.5 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/44983/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/45576/"]){--diff:"+1.4 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/45653/"]){--diff:"\00B1 0 same as\A ";--diffColor:var(--planned)}
+.list-item:has(.data.image a[href^="/anime/47163/"]){--diff:"\2212 1.3 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/47790/"]){--diff:"\2212 0.3 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/48415/"]){--diff:"\2212 0.3 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/48468/"]){--diff:"+0.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/48548/"]){--diff:"+0.2 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/48569/"]){--diff:"+1.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/48675/"]){--diff:"\2212 0.8 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/48736/"]){--diff:"+1.9 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/48761/"]){--diff:"\2212 1.9 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/48926/"]){--diff:"+1.2 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/48997/"]){--diff:"\2212 0.1 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/49387/"]){--diff:"\2212 1.8 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/49458/"]){--diff:"+0.7 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/49470/"]){--diff:"\2212 1.7 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/49520/"]){--diff:"\2212 0.3 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/49612/"]){--diff:"\2212 0.3 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/49709/"]){--diff:"+1.9 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/49778/"]){--diff:"+0.7 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/49834/"]){--diff:"+0.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/49891/"]){--diff:"\2212 0.5 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/49926/"]){--diff:"+1.7 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/49930/"]){--diff:"\2212 0.4 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/50172/"]){--diff:"+1.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/50175/"]){--diff:"\00B1 0 same as\A ";--diffColor:var(--planned)}
+.list-item:has(.data.image a[href^="/anime/50184/"]){--diff:"\2212 0.2 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/50307/"]){--diff:"\2212 1.6 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/50360/"]){--diff:"+1.2 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/50392/"]){--diff:"+1.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/50416/"]){--diff:"\2212 1.1 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/50425/"]){--diff:"+0.4 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/50461/"]){--diff:"\2212 0.3 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/50593/"]){--diff:"+1.0 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/50631/"]){--diff:"\00B1 0 same as\A ";--diffColor:var(--planned)}
+.list-item:has(.data.image a[href^="/anime/50739/"]){--diff:"+2.2 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/50854/"]){--diff:"+2.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/51009/"]){--diff:"\2212 0.7 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/51019/"]){--diff:"+1.9 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/51096/"]){--diff:"\00B1 0 same as\A ";--diffColor:var(--planned)}
+.list-item:has(.data.image a[href^="/anime/51122/"]){--diff:"+1.9 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/51179/"]){--diff:"+0.8 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/51212/"]){--diff:"+0.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/51498/"]){--diff:"+0.8 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/51648/"]){--diff:"+0.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/51815/"]){--diff:"\2212 1.5 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/52173/"]){--diff:"\2212 0.3 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/52211/"]){--diff:"+0.4 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/52299/"]){--diff:"\2212 0.1 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/52305/"]){--diff:"\2212 1.7 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/52347/"]){--diff:"\2212 2.1 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/52367/"]){--diff:"+2.8 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/52578/"]){--diff:"+1.8 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/52741/"]){--diff:"+1.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/52830/"]){--diff:"\2212 0.3 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/52865/"]){--diff:"\2212 0.9 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/52973/"]){--diff:"+0.7 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/52990/"]){--diff:"\2212 0.8 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/53050/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/53263/"]){--diff:"\2212 0.1 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/53379/"]){--diff:"\2212 0.9 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/53411/"]){--diff:"+0.9 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/53434/"]){--diff:"\2212 0.3 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/53632/"]){--diff:"+1.4 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/53802/"]){--diff:"+2.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/54234/"]){--diff:"+2.8 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/54265/"]){--diff:"\2212 1.1 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/54275/"]){--diff:"+0.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/54714/"]){--diff:"\2212 1.7 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/54744/"]){--diff:"\2212 3.5 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/54853/"]){--diff:"+2.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/54855/"]){--diff:"\2212 6.3 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/54857/"]){--diff:"+1.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/55129/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/55690/"]){--diff:"+1.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/55749/"]){--diff:"+0.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/55818/"]){--diff:"\2212 0.5 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/55887/"]){--diff:"\2212 0.1 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/55888/"]){--diff:"\2212 0.4 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/55996/"]){--diff:"+0.8 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/56009/"]){--diff:"+0.9 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/56062/"]){--diff:"\2212 0.2 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/56734/"]){--diff:"\2212 1.8 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/56838/"]){--diff:"\2212 1.0 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/57100/"]){--diff:"\2212 0.5 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/57524/"]){--diff:"\2212 0.1 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/57611/"]){--diff:"+0.9 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/57876/"]){--diff:"+0.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/57969/"]){--diff:"\2212 0.9 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/58272/"]){--diff:"+0.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/58449/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/58567/"]){--diff:"+0.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/59135/"]){--diff:"+0.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/59144/"]){--diff:"\2212 1.3 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/59361/"]){--diff:"\2212 0.5 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/59424/"]){--diff:"\2212 0.1 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/59452/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/59457/"]){--diff:"\2212 2.2 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/59632/"]){--diff:"+0.7 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/59730/"]){--diff:"\2212 1.5 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/61023/"]){--diff:"\2212 0.7 below\A ";--diffColor:var(--dropped)}
+.list-item:has(.data.image a[href^="/anime/63046/"]){--diff:"\2212 1.6 below\A ";--diffColor:var(--dropped)}
