@@ -658,21 +658,39 @@ body:has(#show-stats-button i:active){--en:1;transition:none}
 body .data.title .link{font-size:calc(13px - 13px * var(--en) * var(--hasEn,0)) !important}
 body .data.title .link::before{content:var(--tEn,"");font-size:calc(13px * var(--en))}
 body .list-unit .list-status-title .stats{display:block}
-body .list-unit .list-status-title .stats #show-stats-button{position:absolute;top:0;left:calc(178px + 0.07 * (var(--listW) - 980px));display:flex !important;align-items:stretch;width:104px;height:32px;padding:0;margin:0;background:hsl(var(--btn)) !important;border:2px solid hsl(var(--btn));border-radius:16px;box-shadow:-0.5px 0.7px 2.1px hsla(0,0%,0%,35%);font-size:0;isolation:isolate;cursor:pointer;transition:border-color var(--timeButton) var(--bezierFast)}
+body .list-unit .list-status-title .stats{display:block}
+body .list-unit .list-status-title .stats #show-stats-button{position:absolute;top:0;left:calc(178px + 0.07 * (var(--listW) - 980px));display:flex !important;align-items:stretch;width:calc(94px + 0.035 * (var(--listW) - 980px));height:32px;padding:0;margin:0;background:linear-gradient(225deg,hsla(var(--btnLight)) 20px,hsl(var(--btn)) 20px) hsl(var(--btn)) !important;border:2px solid hsl(var(--btn));border-radius:3px;box-shadow:-0.5px 0.7px 2.1px hsla(0,0%,0%,35%);font-size:0;isolation:isolate;cursor:pointer;transition:border-color var(--timeButton) var(--bezierFast)}
 body .list-unit .list-status-title .stats #show-stats-button:hover{border-color:hsl(var(--btnAccent))}
-body #show-stats-button i,body #show-stats-button::before{flex:1;display:flex;align-items:center;justify-content:center;font:normal 11px/1 var(--font);letter-spacing:1px;transition:color var(--timeButtonLarge) var(--bezierSmooth)}
-body #show-stats-button i{order:0;color:color-mix(in srgb,hsl(var(--bg)) calc(var(--en) * 100%),hsla(var(--text),80%))}
-body #show-stats-button i::before{content:"ENG";font:inherit}
-body #show-stats-button::before{content:"JP";order:1;color:color-mix(in srgb,hsl(var(--bg)) calc((1 - var(--en)) * 100%),hsla(var(--text),80%))}
-body #show-stats-button::after{content:"";position:absolute;top:2px;left:2px;z-index:-1;width:calc(50% - 4px);height:calc(100% - 4px);background:hsl(var(--accent));border-radius:12px;transform:translateX(calc((1 - var(--en)) * (100% + 4px)));transition:transform var(--timeButtonLarge) var(--bezierSmooth)}
+/* flags instead of text (UK = English, Japan = Japanese); the inactive one is greyed out. Fonts pinned because the
+   Font Awesome legacy CSS forces its icon font on <i> with !important (that is why ENG and JP looked different) */
+body #show-stats-button i,body #show-stats-button::before{content:"";flex:1;display:block;font-family:var(--font) !important;-webkit-font-smoothing:auto;font-size:0;transition:filter var(--timeButtonLarge) var(--bezierSmooth)}
+body #show-stats-button i::before{content:"" !important;font-family:var(--font) !important}
+body #show-stats-button i{order:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3CclipPath id='s'%3E%3Crect width='60' height='30' rx='4'/%3E%3C/clipPath%3E%3CclipPath id='t'%3E%3Cpath d='M30,15h30v15zv15h-30zh-30v-15zv-15h30z'/%3E%3C/clipPath%3E%3Cg clip-path='url(%23s)'%3E%3Cpath d='M0,0v30h60v-30z' fill='%23012169'/%3E%3Cpath d='M0,0L60,30M60,0L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0L60,30M60,0L0,30' clip-path='url(%23t)' stroke='%23C8102E' stroke-width='4'/%3E%3Cpath d='M30,0v30M0,15h60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0v30M0,15h60' stroke='%23C8102E' stroke-width='6'/%3E%3C/g%3E%3C/svg%3E") center/26px 13px no-repeat;filter:grayscale(calc((1 - var(--en)) * .75)) opacity(calc(.5 + .5 * var(--en)))}
+body #show-stats-button::before{order:1;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 20'%3E%3Crect width='30' height='20' rx='2.5' fill='%23fff'/%3E%3Ccircle cx='15' cy='10' r='6' fill='%23bc002d'/%3E%3Crect x='.5' y='.5' width='29' height='19' rx='2' fill='none' stroke='%23000' stroke-opacity='.3'/%3E%3C/svg%3E") center/20px 13px no-repeat;filter:grayscale(calc(var(--en) * .75)) opacity(calc(1 - .5 * var(--en)))}
+body #show-stats-button::after{content:"";position:absolute;top:2px;left:2px;z-index:-1;width:calc(50% - 4px);height:calc(100% - 4px);background:hsla(var(--accent),.85);border-radius:2px;transform:translateX(calc((1 - var(--en)) * (100% + 4px)));transition:transform var(--timeButtonLarge) var(--bezierSmooth)}
 /* at mid widths the centred tab row would run into the slider: fit it into the free space between the slider
    and the search box (computed per --listW breakpoint: 910px -> ~405px free, 1133.5px -> ~597px; both centred +56px) */
-@media (min-width:927px) and (max-width:1150.4px){body #status-menu:not(.fixed) .status-menu{position:relative;left:56px;width:400px}body #status-menu:not(.fixed) .status-button{padding:0 5px}body #status-menu:not(.fixed) .status-button::before{font-size:13px}}
-@media (min-width:1150.5px) and (max-width:1373.9px){body #status-menu:not(.fixed) .status-menu{position:relative;left:56px;width:585px}}
+@media (min-width:927px) and (max-width:1150.4px){body #status-menu .status-menu{position:relative;left:56px;width:400px}body #status-menu .status-button{padding:0 5px}body #status-menu .status-button::before{font-size:13px}}
+@media (min-width:1150.5px) and (max-width:1373.9px){body #status-menu .status-menu{position:relative;left:56px;width:585px}}
+/* scrolled (sticky tab bar): keep the slider in the bar. The title block gets back the full height Brink's
+   "Small Adjustments" took away (so its sticky .stats row can follow the page) but lets clicks through; only
+   Filters and the top stats line fade out. */
+body .list-unit .list-status-title{height:calc(100% - 22px) !important;pointer-events:none}
+body .list-unit .list-status-title .stats{pointer-events:auto}
+body #status-menu.fixed~.list-block .list-status-title{opacity:1;translate:none}
+body #status-menu.fixed~.list-block .list-status-title .stats{top:10px}
+body #advanced-options-button,body .list-unit .list-status-title .text{transition:opacity var(--timeMenu) var(--bezierFast),color var(--timeText) var(--bezierFast)}
+body #status-menu.fixed~.list-block #advanced-options-button,body #status-menu.fixed~.list-block .list-status-title .text{opacity:0;pointer-events:none}
+/* stronger sticky-bar background: drawn inside the list's layer (under the slider, over the cards) instead of
+   Brink's faint gradient on #status-menu, which painted over the slider */
+body .list-unit::before{content:"";position:fixed;top:0;left:0;right:0;z-index:29;height:54px;background:hsla(var(--bg),.95);box-shadow:0 6px 18px hsla(0,0%,0%,.6),0 1px 0 hsla(var(--accent),.18);opacity:0;pointer-events:none;transition:opacity var(--timeMenu) var(--bezierFast)}
+body #status-menu.fixed~.list-block .list-unit::before{opacity:1}
+body #status-menu.fixed::after{opacity:0}
 /* MAL's own click handler slides the footer stats up/down: neutralise it */
 body .list-unit .list-stats{height:auto !important;overflow:visible !important;padding-top:0 !important;padding-bottom:0 !important;margin-top:0 !important;margin-bottom:0 !important}
 @media (max-width:926px){body .list-block{padding-top:152px;padding-bottom:80px}body .list-unit .list-status-title .text{left:calc(238px - 50vw);width:calc(100vw - 40px)}
-body .list-unit .list-status-title .stats #show-stats-button{left:186px}body #status-menu .search-container{left:calc(50% + 81px);width:137px}}
+body .list-unit .list-status-title .stats #show-stats-button{left:186px;width:98px}body #status-menu .search-container{left:calc(50% + 75px);width:143px}
+body #status-menu.fixed~.list-block .list-unit .list-status-title .stats #show-stats-button{left:calc(258px - 50vw + 8px)}body #status-menu.fixed .status-menu{width:min(560px,calc(100vw - 310px)) !important}body #status-menu.fixed .status-button{padding:0 5px}body #status-menu.fixed .status-button::before{font-size:14px}}
 /* tag colours (icon only) */
 body .data.tags span a[href$="tag=Romance"]::after{color:#3987e5}
 body .data.tags span a[href$="tag=Comedy"]::after{color:#d95926}
