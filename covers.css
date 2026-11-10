@@ -597,19 +597,22 @@ body .data.mal_score::before{content:var(--diff,"") "MAL: ";color:hsl(var(--diff
 [data-query*='"status":6'] .list-item .data.mal_score{bottom:12px}
 .anime[data-query*='"status":6'] .list-item .data.season{bottom:29px}
 .anime[data-query*='"status":6'] .list-item .data.title{padding-bottom:44px !important}
-/* footer: stats line highlights on hover like the copyright; score chart before it; MAL's "More stats" link (full table) shown */
+/* both stats lines (top + footer) show the SAME generated line: "Scores 1-10 [chart]  TV: ..., Episodes: ..."
+   (refreshed daily). MAL's own footer text is hidden because it abbreviates "Eps", which CSS can't rewrite;
+   its "More stats" link (the full table) stays, after the text. Both highlight on hover like the copyright. */
 #footer-block{pointer-events:none}
 #footer-block #copyright{pointer-events:auto}
-.list-unit .list-stats{transition:color var(--timeText) var(--bezierFast)}
-.list-unit .list-stats:hover{color:hsla(var(--text),100%)}
-.list-unit .list-stats::before{content:var(--chartLabel,none);display:inline-block;margin-right:14px;padding-right:110px;background:var(--scoreChart) right center/100px 14px no-repeat}
-body .list-unit .list-stats a.floatRightHeader{display:inline;float:none;margin-left:12px;padding:0;color:inherit;font-size:inherit}
+body .list-unit .list-stats,body .list-unit .list-status-title .text{display:flex !important;flex-wrap:wrap;justify-content:center;align-items:center;row-gap:2px;height:auto;color:hsla(var(--text),40%);font-size:0 !important;line-height:16px;transition:color var(--timeText) var(--bezierFast)}
+body .list-unit .list-stats:hover,body .list-unit .list-status-title .text:hover{color:hsla(var(--text),100%)}
+body .list-unit .list-stats::before,body .list-unit .list-status-title .text::before{content:var(--chartLabel,none);margin-right:14px;padding-right:110px;background:var(--scoreChart) right center/100px 14px no-repeat;font:12px/16px var(--font);white-space:nowrap}
+body .list-unit .list-stats::after,body .list-unit .list-status-title .text::after{content:var(--statsText,none);max-width:100%;font:12px/16px var(--font);text-align:center}
+body .list-unit .list-stats>span:not(:has(>a.floatRightHeader)){display:none}
+body .list-unit .list-stats>span:has(>a.floatRightHeader){order:2;margin-left:12px}
+body .list-unit .list-stats a.floatRightHeader{display:inline;float:none;padding:0;color:inherit;font:12px/16px var(--font);white-space:nowrap}
 body .list-unit .list-stats a.floatRightHeader:hover{color:hsl(var(--textLinkHov))}
-/* stats line also at the top, under the tabs (text from MAL's footer line, refreshed daily) */
+/* the top copy sits under the tabs */
 body .list-block{padding-top:88px}
-body .list-unit .list-status-title .text{position:absolute;top:42px;left:0;display:block;width:calc(var(--listW) - 40px);height:16px;overflow:hidden;color:hsla(var(--text),40%);font-size:0;text-align:center;white-space:nowrap;pointer-events:auto;cursor:default;transition:color var(--timeText) var(--bezierFast)}
-body .list-unit .list-status-title .text::before{content:var(--statsText,none);font:12px/16px var(--font)}
-body .list-unit .list-status-title .text:hover{color:hsla(var(--text),100%)}
+body .list-unit .list-status-title .text{position:absolute;top:42px;left:0;width:calc(var(--listW) - 40px);min-height:16px;pointer-events:auto;cursor:default}
 /* the tabs' hidden 0px-font label text still takes a 30px line box that spills below each button and
    stole the mouse from the stats line; clip the buttons to their own box */
 body #status-menu .status-button{overflow:hidden}
@@ -632,7 +635,8 @@ body .list-item,body .list-item:is(:hover,:focus-within){transform:scale(.95)}
 body .list-item:is(:hover,:focus-within) .data.image .link{filter:brightness(var(--imageBrightnessHov)) opacity(var(--imageBrightnessHov))}
 body .more-content,body .notes .text,body .notes textarea{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
-@media (max-width:926px){body .list-block{padding-top:132px}body .list-unit .list-status-title .text{width:436px}}
+body .list-unit .loading-space{pointer-events:none}
+@media (max-width:926px){body .list-block{padding-top:152px;padding-bottom:80px}body .list-unit .list-status-title .text{left:calc(238px - 50vw);width:calc(100vw - 40px)}}
 /* tag colours (icon only) */
 body .data.tags span a[href$="tag=Romance"]::after{color:#3987e5}
 body .data.tags span a[href$="tag=Comedy"]::after{color:#d95926}
@@ -642,8 +646,8 @@ body .data.tags span a[href$="tag=Seinen"]::after{color:#d55181}
 body .data.tags span a[href$="tag=Drama"]::after{color:#008300}
 body .data.tags span a[href$="tag=Ecchi"]::after{color:#9085e9}
 body .data.tags span a[href$="tag=Action"]::after{color:#e66767}
-body.anime{--scoreChart:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%2214%22 viewBox=%220 0 100 14%22%3E%3Cg fill=%22hsl%28243,32%25,78%25%29%22%3E%3Crect x=%220%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2210%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2220%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2230%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2240%22 y=%2211%22 width=%228%22 height=%223%22 rx=%221.5%22/%3E%3Crect x=%2250%22 y=%228%22 width=%228%22 height=%226%22 rx=%221.5%22/%3E%3Crect x=%2260%22 y=%221%22 width=%228%22 height=%2213%22 rx=%221.5%22/%3E%3Crect x=%2270%22 y=%225%22 width=%228%22 height=%229%22 rx=%221.5%22/%3E%3Crect x=%2280%22 y=%229%22 width=%228%22 height=%225%22 rx=%221.5%22/%3E%3Crect x=%2290%22 y=%226%22 width=%228%22 height=%228%22 rx=%221.5%22/%3E%3C/g%3E%3C/svg%3E");--chartLabel:"Scores 1\2013 10";--statsText:"TV: 415, OVA: 29, Movies: 52, Spcl.: 20, Eps: 2464, Days: 40.98, Mean Score: 7.6, Score Dev.: 0.07"}
-body.manga{--chartLabel:none;--statsText:"Chapters: 0, Volumes: 0, Days: 0, Mean Score: 0.0, Score Dev.: 0.00"}
+body.anime{--scoreChart:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%2214%22 viewBox=%220 0 100 14%22%3E%3Cg fill=%22hsl%28243,32%25,78%25%29%22%3E%3Crect x=%220%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2210%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2220%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2230%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2240%22 y=%2211%22 width=%228%22 height=%223%22 rx=%221.5%22/%3E%3Crect x=%2250%22 y=%228%22 width=%228%22 height=%226%22 rx=%221.5%22/%3E%3Crect x=%2260%22 y=%221%22 width=%228%22 height=%2213%22 rx=%221.5%22/%3E%3Crect x=%2270%22 y=%225%22 width=%228%22 height=%229%22 rx=%221.5%22/%3E%3Crect x=%2280%22 y=%229%22 width=%228%22 height=%225%22 rx=%221.5%22/%3E%3Crect x=%2290%22 y=%226%22 width=%228%22 height=%228%22 rx=%221.5%22/%3E%3C/g%3E%3C/svg%3E");--chartLabel:"Scores 1\2013 10";--statsText:"TV: 415, OVA: 29, Movies: 52, Specials: 20, Episodes: 2464, Days: 40.98, Mean Score: 7.6, Score Deviation: 0.07"}
+body.manga{--chartLabel:none;--statsText:"Chapters: 0, Volumes: 0, Days: 0, Mean Score: 0.0, Score Deviation: 0.00"}
 .list-item:has(.data.image a[href^="/anime/199/"]){--diff:"+0.2 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/245/"]){--diff:"\2212 1.7 below\A ";--diffColor:var(--dropped)}
 .list-item:has(.data.image a[href^="/anime/431/"]){--diff:"\2212 0.7 below\A ";--diffColor:var(--dropped)}

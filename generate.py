@@ -59,19 +59,22 @@ body .data.mal_score::before{content:var(--diff,"") "MAL: ";color:hsl(var(--diff
 [data-query*='"status":6'] .list-item .data.mal_score{bottom:12px}
 .anime[data-query*='"status":6'] .list-item .data.season{bottom:29px}
 .anime[data-query*='"status":6'] .list-item .data.title{padding-bottom:44px !important}
-/* footer: stats line highlights on hover like the copyright; score chart before it; MAL's "More stats" link (full table) shown */
+/* both stats lines (top + footer) show the SAME generated line: "Scores 1-10 [chart]  TV: ..., Episodes: ..."
+   (refreshed daily). MAL's own footer text is hidden because it abbreviates "Eps", which CSS can't rewrite;
+   its "More stats" link (the full table) stays, after the text. Both highlight on hover like the copyright. */
 #footer-block{pointer-events:none}
 #footer-block #copyright{pointer-events:auto}
-.list-unit .list-stats{transition:color var(--timeText) var(--bezierFast)}
-.list-unit .list-stats:hover{color:hsla(var(--text),100%)}
-.list-unit .list-stats::before{content:var(--chartLabel,none);display:inline-block;margin-right:14px;padding-right:110px;background:var(--scoreChart) right center/100px 14px no-repeat}
-body .list-unit .list-stats a.floatRightHeader{display:inline;float:none;margin-left:12px;padding:0;color:inherit;font-size:inherit}
+body .list-unit .list-stats,body .list-unit .list-status-title .text{display:flex !important;flex-wrap:wrap;justify-content:center;align-items:center;row-gap:2px;height:auto;color:hsla(var(--text),40%);font-size:0 !important;line-height:16px;transition:color var(--timeText) var(--bezierFast)}
+body .list-unit .list-stats:hover,body .list-unit .list-status-title .text:hover{color:hsla(var(--text),100%)}
+body .list-unit .list-stats::before,body .list-unit .list-status-title .text::before{content:var(--chartLabel,none);margin-right:14px;padding-right:110px;background:var(--scoreChart) right center/100px 14px no-repeat;font:12px/16px var(--font);white-space:nowrap}
+body .list-unit .list-stats::after,body .list-unit .list-status-title .text::after{content:var(--statsText,none);max-width:100%;font:12px/16px var(--font);text-align:center}
+body .list-unit .list-stats>span:not(:has(>a.floatRightHeader)){display:none}
+body .list-unit .list-stats>span:has(>a.floatRightHeader){order:2;margin-left:12px}
+body .list-unit .list-stats a.floatRightHeader{display:inline;float:none;padding:0;color:inherit;font:12px/16px var(--font);white-space:nowrap}
 body .list-unit .list-stats a.floatRightHeader:hover{color:hsl(var(--textLinkHov))}
-/* stats line also at the top, under the tabs (text from MAL's footer line, refreshed daily) */
+/* the top copy sits under the tabs */
 body .list-block{padding-top:88px}
-body .list-unit .list-status-title .text{position:absolute;top:42px;left:0;display:block;width:calc(var(--listW) - 40px);height:16px;overflow:hidden;color:hsla(var(--text),40%);font-size:0;text-align:center;white-space:nowrap;pointer-events:auto;cursor:default;transition:color var(--timeText) var(--bezierFast)}
-body .list-unit .list-status-title .text::before{content:var(--statsText,none);font:12px/16px var(--font)}
-body .list-unit .list-status-title .text:hover{color:hsla(var(--text),100%)}
+body .list-unit .list-status-title .text{position:absolute;top:42px;left:0;width:calc(var(--listW) - 40px);min-height:16px;pointer-events:auto;cursor:default}
 /* the tabs' hidden 0px-font label text still takes a 30px line box that spills below each button and
    stole the mouse from the stats line; clip the buttons to their own box */
 body #status-menu .status-button{overflow:hidden}
@@ -94,7 +97,8 @@ body .list-item,body .list-item:is(:hover,:focus-within){transform:scale(.95)}
 body .list-item:is(:hover,:focus-within) .data.image .link{filter:brightness(var(--imageBrightnessHov)) opacity(var(--imageBrightnessHov))}
 body .more-content,body .notes .text,body .notes textarea{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
-@media (max-width:926px){body .list-block{padding-top:132px}body .list-unit .list-status-title .text{width:436px}}"""
+body .list-unit .loading-space{pointer-events:none}
+@media (max-width:926px){body .list-block{padding-top:152px;padding-bottom:80px}body .list-unit .list-status-title .text{left:calc(238px - 50vw);width:calc(100vw - 40px)}}"""
 
 
 def get(url, as_json=False):
@@ -141,7 +145,11 @@ def stats_text(kind):
     if not m:
         return None
     inner = re.sub(r'<span>\s*<a class="floatRightHeader".*?</span>', "", m.group(1), flags=re.S)
-    return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", "", inner))).strip(" ,") or None
+    text = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", "", inner))).strip(" ,")
+    # write MAL's abbreviations in full
+    for short, full in ((r"\bSpcl\.", "Specials"), (r"\bEps\b", "Episodes"), (r"\bDev\.", "Deviation")):
+        text = re.sub(short, full, text)
+    return text or None
 
 
 def score_chart(scores):
