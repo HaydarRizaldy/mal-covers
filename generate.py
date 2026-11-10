@@ -33,8 +33,8 @@ UA = {"User-Agent": "mal-covers (github.com/HaydarRizaldy/mal-covers)"}
 # Top-8 tags (by frequency in this list) -> validated dark categorical palette, fixed slot order
 # (dataviz reference palette, dark column: worst adjacent CVD dE 8.4, normal-vision >= 15).
 # Every tag also shows its name, so colour is never the only cue. Other tags stay neutral.
-TAG_COLOURS = [("Romance", "#3987e5"), ("Comedy", "#d95926"), ("School", "#199e70"), ("Shounen", "#c98500"),
-               ("Seinen", "#d55181"), ("Drama", "#008300"), ("Ecchi", "#9085e9"), ("Action", "#e66767")]
+TAG_COLOURS = [("Romance", "#d55181"), ("Comedy", "#d95926"), ("School", "#199e70"), ("Shounen", "#c98500"),
+               ("Seinen", "#3987e5"), ("Drama", "#008300"), ("Ecchi", "#9085e9"), ("Action", "#e66767")]
 CHART_FILL = "hsl(243,32%,78%)"  # theme accent (Twilight Indigo lavender); single series -> single hue
 
 # Theme extras that live here instead of the MAL custom CSS (which is near MAL's length cap).
@@ -130,10 +130,10 @@ body #show-stats-button i::before{content:"" !important;font-family:var(--font) 
 body #show-stats-button i{order:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3CclipPath id='s'%3E%3Crect width='60' height='30'/%3E%3C/clipPath%3E%3CclipPath id='t'%3E%3Cpath d='M30,15h30v15zv15h-30zh-30v-15zv-15h30z'/%3E%3C/clipPath%3E%3Cg clip-path='url(%23s)'%3E%3Cpath d='M0,0v30h60v-30z' fill='%23012169'/%3E%3Cpath d='M0,0L60,30M60,0L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0L60,30M60,0L0,30' clip-path='url(%23t)' stroke='%23C8102E' stroke-width='4'/%3E%3Cpath d='M30,0v30M0,15h60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0v30M0,15h60' stroke='%23C8102E' stroke-width='6'/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat;filter:brightness(calc(.35 + .65 * var(--en))) saturate(calc(.4 + .6 * var(--en)))}
 body #show-stats-button::before{order:1;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 20'%3E%3Crect width='30' height='20' fill='%23fff'/%3E%3Ccircle cx='15' cy='10' r='6' fill='%23bc002d'/%3E%3C/svg%3E") center/cover no-repeat;filter:brightness(calc(1 - .65 * var(--en))) saturate(calc(1 - .6 * var(--en)))}
 body #show-stats-button::after{content:none}
-/* at mid widths the centred tab row would run into the slider: fit it into the free space between the slider
-   and the search box (computed per --listW breakpoint: 910px -> ~405px free, 1133.5px -> ~597px; both centred +56px) */
-@media (min-width:927px) and (max-width:1150.4px){body #status-menu .status-menu{position:relative;left:56px;width:400px}body #status-menu .status-button{padding:0 5px}body #status-menu .status-button::before{font-size:13px}}
-@media (min-width:1150.5px) and (max-width:1373.9px){body #status-menu .status-menu{position:relative;left:56px;width:585px}}
+/* at mid widths the centred tab row would run into the switch: pad its left side so the tabs sit in the free space
+   between the switch and the search box. Padding (not position/left) keeps the search box where Brink puts it. */
+@media (min-width:927px) and (max-width:1150.4px){body #status-menu .status-menu{padding-left:124px;pointer-events:none}body #status-menu .status-menu>*{pointer-events:auto}body #status-menu .status-button{padding:0 5px}body #status-menu .status-button::before{font-size:13px}}
+@media (min-width:1150.5px) and (max-width:1373.9px){body #status-menu .status-menu{padding-left:115px;pointer-events:none}body #status-menu .status-menu>*{pointer-events:auto}}
 /* scrolled (sticky tab bar): keep the slider in the bar. The title block gets back the full height Brink's
    "Small Adjustments" took away (so its sticky .stats row can follow the page) but lets clicks through; only
    Filters and the top stats line fade out. */
@@ -148,11 +148,25 @@ body #status-menu.fixed~.list-block #advanced-options-button,body #status-menu.f
 body .list-unit::before{content:"";position:fixed;top:0;left:0;right:0;z-index:29;height:120px;background:linear-gradient(to bottom,hsla(var(--bg),.9) 0,hsla(var(--bg),.7) 35%,hsla(var(--bg),.35) 65%,hsla(var(--bg),0) 100%);opacity:0;pointer-events:none;transition:opacity var(--timeMenu) var(--bezierFast)}
 body #status-menu.fixed~.list-block .list-unit::before{opacity:1}
 body #status-menu.fixed::after{opacity:0}
+/* search box stays in the sticky tab bar when scrolled (Brink fades it out), level with the tabs */
+body #status-menu.fixed .search-container{opacity:1;translate:none;top:10px}
+/* progress: for Current / Paused entries the bottom status stripe becomes a progress bar (filled part in the
+   status colour, rest dim) in every tab; --prog comes from the daily list data, so it can lag up to a day */
+body .data.image::before{opacity:calc(var(--progOn,0) * .95);background:linear-gradient(to right,hsl(var(--statusColor,var(--accent))) var(--prog,100%),hsla(var(--text),.18) var(--prog,100%))}
+body [data-query*='"status":7'] .data.image::before{opacity:.95}
+/* special tags: gold trophy badge for Award-winning (top-right, beside the favourite ribbon, hidden on hover like
+   it), soft rose glow around Heart-touching cards */
+body .data.tags span a[href$="tag=Award-winning"]{position:absolute;z-index:10;right:32px;top:calc(-51px + 6px);width:24px;height:24px;min-height:0;padding:0;background:hsla(var(--bg),.8);border:1px solid hsla(48,95%,55%,.85);border-radius:50%;box-shadow:0 0 8px hsla(48,95%,55%,.45);color:hsl(48,95%,58%) !important;font-size:0 !important;text-align:center;text-shadow:none;opacity:1;transition:opacity calc(var(--timeItem) * 1.5) var(--bezierFast)}
+body .data.tags span a[href$="tag=Award-winning"]::before{content:"\\f091";font:12px/22px "FontAwesome 4"}
+body .data.tags span a[href$="tag=Award-winning"]::after{content:none}
+body .list-item:not(:has(a[href*="=Favourite"])) .data.tags span a[href$="tag=Award-winning"]{right:4px}
+body .list-item:is(:hover,:focus-within) .data.tags span a[href$="tag=Award-winning"]{opacity:0;pointer-events:none}
+body .list-item:has(.data.tags a[href$="tag=Heart-touching"]) .data.image{box-shadow:0 0 0 1px hsla(345,85%,72%,.55),0 0 16px 2px hsla(345,85%,66%,.4)}
 /* MAL's own click handler slides the footer stats up/down: neutralise it */
 body .list-unit .list-stats{height:auto !important;overflow:visible !important;padding-top:0 !important;padding-bottom:0 !important;margin-top:0 !important;margin-bottom:0 !important}
 @media (max-width:926px){body .list-block{padding-top:152px;padding-bottom:80px}body .list-unit .list-status-title .text{left:calc(238px - 50vw);width:calc(100vw - 40px)}
 body .list-unit .list-status-title .stats #show-stats-button{left:186px;width:98px}body #status-menu .search-container{left:calc(50% + 75px);width:143px}
-body #status-menu.fixed~.list-block .list-unit .list-status-title .stats #show-stats-button{left:calc(258px - 50vw + 8px)}body #status-menu.fixed .status-menu{width:min(560px,calc(100vw - 310px)) !important}body #status-menu.fixed .status-button{padding:0 5px}body #status-menu.fixed .status-button::before{font-size:14px}}"""
+body #status-menu.fixed~.list-block .list-unit .list-status-title .stats #show-stats-button{left:calc(258px - 50vw + 8px)}body #status-menu.fixed .status-menu{width:min(560px,calc(100vw - 310px)) !important}body #status-menu.fixed .status-button{padding:0 5px}body #status-menu.fixed .status-button::before{font-size:14px}body #status-menu.fixed .search-container{left:auto;right:8px;width:min(143px,calc((100vw - min(560px,100vw - 310px)) / 2 - 16px))}}"""
 
 
 def get(url, as_json=False):
@@ -244,6 +258,10 @@ def main():
                 props.append(f'--diff:"{txt}\\A ";--diffColor:{col}')
                 if round(float(diff), 2) >= GEM_DIFF:
                     props.append('--topLabel:"\\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible')
+            done_n = it.get("num_watched_episodes" if kind == "anime" else "num_read_chapters") or 0
+            total_n = it.get("anime_num_episodes" if kind == "anime" else "manga_num_chapters") or 0
+            if it.get("status") in (1, 3) and total_n:
+                props.append(f"--prog:{min(100.0, 100.0 * done_n / total_n):.1f}%;--progOn:1")
             if props:
                 per_entry.append(f".list-item:has({link}){{{';'.join(props)}}}")
             # English title for the ENG/JP slider (targets the title link directly: no :has needed)
