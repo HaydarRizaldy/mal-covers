@@ -35,7 +35,7 @@ UA = {"User-Agent": "mal-covers (github.com/HaydarRizaldy/mal-covers)"}
 # Every tag also shows its name, so colour is never the only cue. Other tags stay neutral.
 TAG_COLOURS = [("Romance", "#3987e5"), ("Comedy", "#d95926"), ("School", "#199e70"), ("Shounen", "#c98500"),
                ("Seinen", "#d55181"), ("Drama", "#008300"), ("Ecchi", "#9085e9"), ("Action", "#e66767")]
-CHART_FILL = "hsl(240,25%,75%)"  # theme accent (lavender); single series -> single hue
+CHART_FILL = "hsl(243,32%,78%)"  # theme accent (Twilight Indigo lavender); single series -> single hue
 
 # Theme extras that live here instead of the MAL custom CSS (which is near MAL's length cap).
 EXTRA_CSS = """/* status stripe along the bottom of each cover (ALL view) */
