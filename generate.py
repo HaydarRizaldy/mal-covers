@@ -35,6 +35,10 @@ UA = {"User-Agent": "mal-covers (github.com/HaydarRizaldy/mal-covers)"}
 # Every tag also shows its name, so colour is never the only cue. Other tags stay neutral.
 TAG_COLOURS = [("Romance", "#d55181"), ("Comedy", "#d95926"), ("School", "#199e70"), ("Shounen", "#c98500"),
                ("Seinen", "#3987e5"), ("Drama", "#008300"), ("Ecchi", "#9085e9"), ("Action", "#e66767")]
+# Next 8 tags by frequency: the same palette in the same fixed order, but a hollow-ring icon (shape = secondary
+# encoding, so no 9th hue is invented). The first 8 keep their colours (colour follows the tag).
+TAG_RINGS = [("Fantasy", "#3987e5"), ("Harem", "#d95926"), ("Isekai", "#199e70"), ("Supernatural", "#c98500"),
+             ("Sci-Fi", "#d55181"), ("Friendship", "#008300"), ("Slice of Life", "#9085e9"), ("Gore", "#e66767")]
 CHART_FILL = "hsl(243,32%,78%)"  # theme accent (Twilight Indigo lavender); single series -> single hue
 
 # Theme extras that live here instead of the MAL custom CSS (which is near MAL's length cap).
@@ -162,6 +166,20 @@ body .data.tags span a[href$="tag=Award-winning"]::after{content:none}
 body .list-item:not(:has(a[href*="=Favourite"])) .data.tags span a[href$="tag=Award-winning"]{right:4px}
 body .list-item:is(:hover,:focus-within) .data.tags span a[href$="tag=Award-winning"]{opacity:0;pointer-events:none}
 body .list-item:has(.data.tags a[href$="tag=Heart-touching"]) .data.image{box-shadow:0 0 0 1px hsla(345,85%,72%,.55),0 0 16px 2px hsla(345,85%,66%,.4)}
+/* hover info: tighter tag rows (19px -> 16px) so up to 11 tags clear the title */
+body .data.tags span a{margin-bottom:1px}
+/* hover info: once a card has tags (which now carry the genres), hide MAL's duplicate genre line */
+body .list-item:has(.data.tags span a) .data.genre{display:none}
+/* hover info: soft fade at the bottom of the scrollable left column, so a cut-off line reads as "scroll for more".
+   A scroll-driven animation shows it only when the column really overflows (an inactive scroll timeline = no
+   animation = stays at opacity 0) and fades it out as you reach the bottom. Browsers without it: no fade. */
+body .list-table-data::after{content:"";order:99;position:sticky;bottom:0;z-index:6;flex:0 0 18px;width:100%;margin-top:-18px;background:linear-gradient(to bottom,hsla(var(--bg),0),hsla(var(--bg),.85));opacity:0;visibility:hidden;pointer-events:none;animation:colfade linear both;animation-timeline:scroll(nearest block)}
+body .list-item:is(:hover,:focus-within) .list-table-data::after{visibility:visible}
+@keyframes colfade{from{opacity:1}to{opacity:0}}
+/* keyboard focus ring on the language switch, like the cards */
+body .list-unit .list-status-title .stats #show-stats-button:focus-visible{outline:2px solid hsl(var(--accent));outline-offset:2px}
+/* airing day (WIB) chip above the title for shows you're watching that are still airing (--airs, daily) */
+body .data.title::before{content:var(--airs,none);position:absolute;left:12px;bottom:100%;margin-bottom:2px;padding:1px 6px;background:hsla(var(--bg),.85);border:1px solid hsla(var(--accent),.55);border-radius:3px;color:hsl(var(--accent));font:bold 9.5px/14px var(--font);letter-spacing:1px;text-shadow:none;white-space:nowrap;pointer-events:none}
 /* MAL's own click handler slides the footer stats up/down: neutralise it */
 body .list-unit .list-stats{height:auto !important;overflow:visible !important;padding-top:0 !important;padding-bottom:0 !important;margin-top:0 !important;margin-bottom:0 !important}
 @media (max-width:926px){body .list-block{padding-top:152px;padding-bottom:80px}body .list-unit .list-status-title .text{left:calc(238px - 50vw);width:calc(100vw - 40px)}
@@ -233,6 +251,19 @@ def score_chart(scores):
     return 'url("data:image/svg+xml,' + urllib.parse.quote(svg, safe=" =:/,") + '")', counts
 
 
+DAYS = ["Mondays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays", "Sundays"]
+
+
+def broadcast_wib(anime_id):
+    """'Saturdays at 01:28 (JST)' on the MAL page -> 'FRI 23:28 WIB' (WIB = JST - 2h), or None."""
+    page = get(f"https://myanimelist.net/anime/{anime_id}")
+    m = re.search(r'<span class="dark_text">Broadcast:</span>\s*([A-Za-z]+) at (\d{1,2}):(\d{2}) \(JST\)', page)
+    if not m or m[1] not in DAYS:
+        return None
+    mins = (DAYS.index(m[1]) * 1440 + int(m[2]) * 60 + int(m[3]) - 120) % (7 * 1440)
+    return f"{DAYS[mins // 1440][:3].upper()} {mins % 1440 // 60:02d}:{mins % 60:02d} WIB"
+
+
 def main():
     rules, per_entry, lists, titles = [], [], [], []
     cutoff = max(time.time() - UPDATED_DAYS * 86400, UPDATED_NOT_BEFORE)
@@ -262,6 +293,11 @@ def main():
             total_n = it.get("anime_num_episodes" if kind == "anime" else "manga_num_chapters") or 0
             if it.get("status") in (1, 3) and total_n:
                 props.append(f"--prog:{min(100.0, 100.0 * done_n / total_n):.1f}%;--progOn:1")
+            if kind == "anime" and it.get("status") == 1 and it.get("anime_airing_status") == 1:
+                airs = broadcast_wib(it["anime_id"])
+                time.sleep(2)
+                if airs:
+                    props.append(f'--airs:"\\f017  {airs}"')
             if props:
                 per_entry.append(f".list-item:has({link}){{{';'.join(props)}}}")
             # English title for the ENG/JP slider (targets the title link directly: no :has needed)
@@ -277,6 +313,7 @@ def main():
         time.sleep(2)
 
     tags = "\n".join(f'body .data.tags span a[href$="tag={urllib.parse.quote_plus(t)}"]::after{{color:{c}}}' for t, c in TAG_COLOURS)
+    tags += "\n" + "\n".join(f'body .data.tags span a[href$="tag={urllib.parse.quote_plus(t)}"]::after{{content:"\\f1db";color:{c}}}' for t, c in TAG_RINGS)
     css = (
         '@charset "UTF-8";\n'
         f"/* Sharper covers + theme extras for MAL user {USER} - {len(rules)} covers, built "

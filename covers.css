@@ -700,6 +700,20 @@ body .data.tags span a[href$="tag=Award-winning"]::after{content:none}
 body .list-item:not(:has(a[href*="=Favourite"])) .data.tags span a[href$="tag=Award-winning"]{right:4px}
 body .list-item:is(:hover,:focus-within) .data.tags span a[href$="tag=Award-winning"]{opacity:0;pointer-events:none}
 body .list-item:has(.data.tags a[href$="tag=Heart-touching"]) .data.image{box-shadow:0 0 0 1px hsla(345,85%,72%,.55),0 0 16px 2px hsla(345,85%,66%,.4)}
+/* hover info: tighter tag rows (19px -> 16px) so up to 11 tags clear the title */
+body .data.tags span a{margin-bottom:1px}
+/* hover info: once a card has tags (which now carry the genres), hide MAL's duplicate genre line */
+body .list-item:has(.data.tags span a) .data.genre{display:none}
+/* hover info: soft fade at the bottom of the scrollable left column, so a cut-off line reads as "scroll for more".
+   A scroll-driven animation shows it only when the column really overflows (an inactive scroll timeline = no
+   animation = stays at opacity 0) and fades it out as you reach the bottom. Browsers without it: no fade. */
+body .list-table-data::after{content:"";order:99;position:sticky;bottom:0;z-index:6;flex:0 0 18px;width:100%;margin-top:-18px;background:linear-gradient(to bottom,hsla(var(--bg),0),hsla(var(--bg),.85));opacity:0;visibility:hidden;pointer-events:none;animation:colfade linear both;animation-timeline:scroll(nearest block)}
+body .list-item:is(:hover,:focus-within) .list-table-data::after{visibility:visible}
+@keyframes colfade{from{opacity:1}to{opacity:0}}
+/* keyboard focus ring on the language switch, like the cards */
+body .list-unit .list-status-title .stats #show-stats-button:focus-visible{outline:2px solid hsl(var(--accent));outline-offset:2px}
+/* airing day (WIB) chip above the title for shows you're watching that are still airing (--airs, daily) */
+body .data.title::before{content:var(--airs,none);position:absolute;left:12px;bottom:100%;margin-bottom:2px;padding:1px 6px;background:hsla(var(--bg),.85);border:1px solid hsla(var(--accent),.55);border-radius:3px;color:hsl(var(--accent));font:bold 9.5px/14px var(--font);letter-spacing:1px;text-shadow:none;white-space:nowrap;pointer-events:none}
 /* MAL's own click handler slides the footer stats up/down: neutralise it */
 body .list-unit .list-stats{height:auto !important;overflow:visible !important;padding-top:0 !important;padding-bottom:0 !important;margin-top:0 !important;margin-bottom:0 !important}
 @media (max-width:926px){body .list-block{padding-top:152px;padding-bottom:80px}body .list-unit .list-status-title .text{left:calc(238px - 50vw);width:calc(100vw - 40px)}
@@ -714,6 +728,14 @@ body .data.tags span a[href$="tag=Seinen"]::after{color:#3987e5}
 body .data.tags span a[href$="tag=Drama"]::after{color:#008300}
 body .data.tags span a[href$="tag=Ecchi"]::after{color:#9085e9}
 body .data.tags span a[href$="tag=Action"]::after{color:#e66767}
+body .data.tags span a[href$="tag=Fantasy"]::after{content:"\f1db";color:#3987e5}
+body .data.tags span a[href$="tag=Harem"]::after{content:"\f1db";color:#d95926}
+body .data.tags span a[href$="tag=Isekai"]::after{content:"\f1db";color:#199e70}
+body .data.tags span a[href$="tag=Supernatural"]::after{content:"\f1db";color:#c98500}
+body .data.tags span a[href$="tag=Sci-Fi"]::after{content:"\f1db";color:#d55181}
+body .data.tags span a[href$="tag=Friendship"]::after{content:"\f1db";color:#008300}
+body .data.tags span a[href$="tag=Slice+of+Life"]::after{content:"\f1db";color:#9085e9}
+body .data.tags span a[href$="tag=Gore"]::after{content:"\f1db";color:#e66767}
 body.anime{--scoreChart:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%2214%22 viewBox=%220 0 100 14%22%3E%3Cg fill=%22hsl%28243,32%25,78%25%29%22%3E%3Crect x=%220%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2210%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2220%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2230%22 y=%2213%22 width=%228%22 height=%221%22 rx=%221.5%22/%3E%3Crect x=%2240%22 y=%2211%22 width=%228%22 height=%223%22 rx=%221.5%22/%3E%3Crect x=%2250%22 y=%228%22 width=%228%22 height=%226%22 rx=%221.5%22/%3E%3Crect x=%2260%22 y=%221%22 width=%228%22 height=%2213%22 rx=%221.5%22/%3E%3Crect x=%2270%22 y=%225%22 width=%228%22 height=%229%22 rx=%221.5%22/%3E%3Crect x=%2280%22 y=%229%22 width=%228%22 height=%225%22 rx=%221.5%22/%3E%3Crect x=%2290%22 y=%226%22 width=%228%22 height=%228%22 rx=%221.5%22/%3E%3C/g%3E%3C/svg%3E");--chartLabel:"Scores 1\2013 10";--statsText:"TV: 415, OVA: 29, Movies: 52, Specials: 20, Episodes: 2464, Days: 40.98, Mean Score: 7.6, Score Deviation: 0.07"}
 body.manga{--chartLabel:none;--statsText:"Chapters: 0, Volumes: 0, Days: 0, Mean Score: 0.0, Score Deviation: 0.00"}
 .list-item:has(.data.image a[href^="/anime/199/"]){--diff:"+0.2 above\A ";--diffColor:var(--current)}
@@ -957,7 +979,7 @@ body.manga{--chartLabel:none;--statsText:"Chapters: 0, Volumes: 0, Days: 0, Mean
 .list-item:has(.data.image a[href^="/anime/59632/"]){--diff:"+0.7 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/59730/"]){--diff:"\2212 1.5 below\A ";--diffColor:var(--dropped)}
 .list-item:has(.data.image a[href^="/anime/61023/"]){--diff:"\2212 0.7 below\A ";--diffColor:var(--dropped)}
-.list-item:has(.data.image a[href^="/anime/61578/"]){--prog:0.0%;--progOn:1}
+.list-item:has(.data.image a[href^="/anime/61578/"]){--prog:0.0%;--progOn:1;--airs:"\f017  SAT 22:30 WIB"}
 .list-item:has(.data.image a[href^="/anime/63046/"]){--diff:"\2212 1.6 below\A ";--diffColor:var(--dropped)}
 /* English titles for the ENG/JP slider */
 .data.title a[href^="/anime/57/"]{--tEn:"Beck: Mongolian Chop Squad";--hasEn:1}
