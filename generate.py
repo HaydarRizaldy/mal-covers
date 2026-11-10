@@ -66,7 +66,7 @@ body .data.mal_score::before{content:var(--diff,"") "MAL: ";color:hsl(var(--diff
 #footer-block #copyright{pointer-events:auto}
 body .list-unit .list-stats,body .list-unit .list-status-title .text{display:flex !important;flex-wrap:wrap;justify-content:center;align-items:center;row-gap:2px;height:auto;color:hsla(var(--text),40%);font-size:0 !important;line-height:16px;transition:color var(--timeText) var(--bezierFast)}
 body .list-unit .list-stats:hover,body .list-unit .list-status-title .text:hover{color:hsla(var(--text),100%)}
-body .list-unit .list-stats::before,body .list-unit .list-status-title .text::before{content:var(--chartLabel,none);margin-right:14px;padding-right:110px;background:var(--scoreChart) right center/100px 14px no-repeat;font:12px/16px var(--font);white-space:nowrap}
+body .list-unit .list-stats::before{content:var(--chartLabel,none);margin-right:14px;padding-right:110px;background:var(--scoreChart) right center/100px 14px no-repeat;font:12px/16px var(--font);white-space:nowrap}
 body .list-unit .list-stats::after,body .list-unit .list-status-title .text::after{content:var(--statsText,none);max-width:100%;font:12px/16px var(--font);text-align:center}
 body .list-unit .list-stats>span:not(:has(>a.floatRightHeader)){display:none}
 body .list-unit .list-stats>span:has(>a.floatRightHeader){order:2;margin-left:12px}
@@ -97,6 +97,16 @@ body .list-item,body .list-item:is(:hover,:focus-within){transform:scale(.95)}
 body .list-item:is(:hover,:focus-within) .data.image .link{filter:brightness(var(--imageBrightnessHov)) opacity(var(--imageBrightnessHov))}
 body .more-content,body .notes .text,body .notes textarea{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+/* smoother owner user menu: slide with transform (GPU) instead of animating `left` (re-layout every frame),
+   and fade the full-screen dim layer with opacity instead of repainting its background colour each frame.
+   With a transform on the menu its fixed hamburger icon becomes relative to the menu, so the icon is counter-
+   translated by the same amount on the same timing (transition: inherit) and stays still at the top-left. */
+body .list-menu-float{left:0;transform:translateX(-228px);will-change:transform;transition:transform var(--timeMenu) var(--bezierSmooth) var(--delayMenu)}
+body .list-menu-float:hover{transform:none;transition-delay:0s}
+body .list-menu-float::after{top:-42px;transform:translateX(228px)}
+body .list-menu-float:hover::after{transform:none}
+body #list-container::after{background:hsla(0,0%,0%,78%);opacity:0;will-change:opacity;transition:opacity var(--timeMenu) var(--bezierSmooth) var(--delayMenu)}
+body .list-menu-float:hover~#list-container::after{opacity:1;transition-delay:0s}
 body .list-unit .loading-space{pointer-events:none}
 @media (max-width:926px){body .list-block{padding-top:152px;padding-bottom:80px}body .list-unit .list-status-title .text{left:calc(238px - 50vw);width:calc(100vw - 40px)}}"""
 
