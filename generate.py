@@ -24,6 +24,9 @@ OUT = sys.argv[2] if len(sys.argv) > 2 else "covers.css"
 SIZE = "r/320x452"  # ~1.5x the 210x300 card; ~21 KB WebP. Use "" (original l-size) for full 2x.
 PAGE = 300  # MAL's load.json page size
 UPDATED_DAYS = 7  # entries changed within this many days get an "UPDATED" chip (anime only: manga has no updated_at)
+# Bulk tag edit on 2026-11-10 bumped updated_at on ~212 entries; ignore changes up to the end of that run
+# so the chip only marks real updates. (Harmless once 7 days have passed.)
+UPDATED_NOT_BEFORE = 1794306500  # end of the bulk tag run (2026-11-10)
 UA = {"User-Agent": "mal-covers (github.com/HaydarRizaldy/mal-covers)"}
 
 # Top-8 tags (by frequency in this list) -> validated dark categorical palette, fixed slot order
@@ -136,7 +139,7 @@ def score_chart(scores):
 
 def main():
     rules, per_entry, lists = [], [], []
-    cutoff = time.time() - UPDATED_DAYS * 86400
+    cutoff = max(time.time() - UPDATED_DAYS * 86400, UPDATED_NOT_BEFORE)
     for kind in ("anime", "manga"):
         items = entries(kind)
         for it in sorted(items, key=lambda i: i[f"{kind}_id"]):

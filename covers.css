@@ -708,7 +708,7 @@ body.manga{--chartLabel:none;--statsText:"Chapters: 0, Volumes: 0, Days: 0, Mean
 .list-item:has(.data.image a[href^="/anime/36871/"]){--diff:"+0.3 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/36882/"]){--diff:"+0.3 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/36885/"]){--diff:"+1.6 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/37021/"]){--updated:"UPDATED";--diff:"+4.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/37021/"]){--diff:"+4.3 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/37210/"]){--diff:"+0.2 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/37347/"]){--diff:"+0.8 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/37450/"]){--diff:"\2212 0.2 below\A ";--diffColor:var(--dropped)}
