@@ -1,4 +1,5 @@
-/* Sharper covers for MAL user _HyZer - 576 entries, built 2026-11-09 by github.com/HaydarRizaldy/mal-covers */
+@charset "UTF-8";
+/* Sharper covers + public notes for MAL user _HyZer - 576 covers, 66 notes, built 2026-11-10 by github.com/HaydarRizaldy/mal-covers */
 .data.image a[href^="/anime/57/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/11/11636.webp)}
 .data.image a[href^="/anime/199/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/6/79597.webp)}
 .data.image a[href^="/anime/226/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/1780/121555.webp)}
@@ -575,3 +576,72 @@
 .data.image a[href^="/manga/128634/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/manga/1/237526.webp)}
 .data.image a[href^="/manga/135034/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/manga/3/260069.webp)}
 .data.image a[href^="/manga/136979/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/manga/2/249234.webp)}
+.data.number::after{content:var(--noteIcon,none);margin-left:5px;font:12px "FontAwesome 4";vertical-align:1px}
+.list-item .data.number:hover{z-index:40;opacity:1}
+.data.number:hover::after{content:var(--note,none);position:absolute;top:22px;left:-4px;width:186px;max-height:240px;overflow:hidden;margin:0;padding:9px 12px 11px;background:hsla(var(--bgAlt),.97);border-left:2px solid hsl(var(--accent));border-radius:0 6px 6px 0;box-shadow:0 0 3.36px 1.68px hsla(0,0%,0%,50%);color:hsl(var(--text));font:normal 12px/16px var(--font);letter-spacing:0;text-transform:none;text-shadow:none;white-space:pre-wrap;overflow-wrap:break-word}
+.list-item:has(.data.image a[href^="/anime/199/"]){--noteIcon:"\f249";--note:"Speechless"}
+.list-item:has(.data.image a[href^="/anime/431/"]){--noteIcon:"\f249";--note:"dah lupa ama ceritanya begimana :( tapi yg pasti lagunya bagus :V"}
+.list-item:has(.data.image a[href^="/anime/1535/"]){--noteIcon:"\f249";--note:"This one is legendary ngl. But I feel bored to watch this at the moment :|"}
+.list-item:has(.data.image a[href^="/anime/4224/"]){--noteIcon:"\f249";--note:"kesel di awal2, tapi endingnya bole la"}
+.list-item:has(.data.image a[href^="/anime/7593/"]){--noteIcon:"\f249";--note:"hehehe.."}
+.list-item:has(.data.image a[href^="/anime/8676/"]){--noteIcon:"\f249";--note:"This should be a VN game instead."}
+.list-item:has(.data.image a[href^="/anime/8861/"]){--noteIcon:"\f249";--note:"Ehem, yes, welcome to Alabama :)"}
+.list-item:has(.data.image a[href^="/anime/11499/"]){--noteIcon:"\f249";--note:"This is actually good, but... something wasn't right, obviously because of the stringing ending."}
+.list-item:has(.data.image a[href^="/anime/11617/"]){--noteIcon:"\f249";--note:"hmm... good tits! I mean, good anime!"}
+.list-item:has(.data.image a[href^="/anime/12531/"]){--noteIcon:"\f249";--note:"Great storyline, a little bit complex romance, and the jazz is really goddamn good in my ears, like I can hear them all day. Masterpiece! I feel so sad for Sentaro; my heart hurts seeing him left by Yurika. Yurika is a bitch!"}
+.list-item:has(.data.image a[href^="/anime/14813/"]){--noteIcon:"\f249";--note:"complex rom-com, berat Lord, aga bikin pusing dikit sampe butuh pelukan hangat :V\A pokoke Lord Hachiman panutanqu (part 1)"}
+.list-item:has(.data.image a[href^="/anime/15451/"]){--noteIcon:"\f249";--note:"\"I never knew there were such beautiful words!\""}
+.list-item:has(.data.image a[href^="/anime/22535/"]){--noteIcon:"\f249";--note:"Pokoke masterpishh!"}
+.list-item:has(.data.image a[href^="/anime/23233/"]){--noteIcon:"\f249";--note:"Very vulgar but not really hentai"}
+.list-item:has(.data.image a[href^="/anime/23277/"]){--noteIcon:"\f249";--note:"Boleh lah konsepnya, bagus!"}
+.list-item:has(.data.image a[href^="/anime/23847/"]){--noteIcon:"\f249";--note:"complex rom-com, berat Lord, aga bikin pusing dikit sampe butuh pelukan hangat :V\A pokoke Lord Hachiman panutanqu (part 2)"}
+.list-item:has(.data.image a[href^="/anime/24405/"]){--noteIcon:"\f249";--note:"The pacing of this anime is slow af"}
+.list-item:has(.data.image a[href^="/anime/24703/"]){--noteIcon:"\f249";--note:"tits everywhere, good :)"}
+.list-item:has(.data.image a[href^="/anime/28851/"]){--noteIcon:"\f249";--note:"Every scene is heart-wrenchingly touching :')"}
+.list-item:has(.data.image a[href^="/anime/30015/"]){--noteIcon:"\f249";--note:"visual dan alur cerita dramanya, epic! konsep ceritanya juga antimainstream :) endingnya ga ada obat, dan wajib nonton OVA-nya!!!"}
+.list-item:has(.data.image a[href^="/anime/30240/"]){--noteIcon:"\f249";--note:"fetish ni, bole la :v"}
+.list-item:has(.data.image a[href^="/anime/30276/"]){--noteIcon:"\f249";--note:"Epic!!!! (part 1)"}
+.list-item:has(.data.image a[href^="/anime/30727/"]){--noteIcon:"\f249";--note:"Bagus banget euy yang part II ini!!"}
+.list-item:has(.data.image a[href^="/anime/33352/"]){--noteIcon:"\f249";--note:"Anti-mainstream story concept. Very heart-touching romance. Even I stopped watching for a moment after nine episodes because my heart couldn't hold it any longer. This is more than enough. Enough to make a man cry. This is definitely a masterpiece for tearjerkers like me!"}
+.list-item:has(.data.image a[href^="/anime/34134/"]){--noteIcon:"\f249";--note:"Epic!!!! (part 2)"}
+.list-item:has(.data.image a[href^="/anime/34281/"]){--noteIcon:"\f249";--note:"more tits everywhere, very good :) But meh ending, very dissapointing :<"}
+.list-item:has(.data.image a[href^="/anime/34902/"]){--noteIcon:"\f249";--note:"another light but good rom-com"}
+.list-item:has(.data.image a[href^="/anime/35413/"]){--noteIcon:"\f249";--note:"Masih kaga ngarti ini alur ceritanya begimana, jadi males nonton :["}
+.list-item:has(.data.image a[href^="/anime/35466/"]){--noteIcon:"\f249";--note:"kelanjutan dari ReLIFE, ini OVA-nya! Ending-nya.. :')"}
+.list-item:has(.data.image a[href^="/anime/35968/"]){--noteIcon:"\f249";--note:"It's a very good otaku rom-com anime. I like all the characters in this anime. BUT, sadly it seems like the ending is stringing. I'm literally craving for the second season!"}
+.list-item:has(.data.image a[href^="/anime/36882/"]){--noteIcon:"\f249";--note:"I hope there will be a Season 2."}
+.list-item:has(.data.image a[href^="/anime/36885/"]){--noteIcon:"\f249";--note:"Anjing, bagus banget bangsatt!!! Masterpisshh!"}
+.list-item:has(.data.image a[href^="/anime/37982/"]){--noteIcon:"\f249";--note:"Ebuset... More shockingly, the full story about the manga is even weirder. Like eww brotha get some help."}
+.list-item:has(.data.image a[href^="/anime/37999/"]){--noteIcon:"\f249";--note:"Bukan cinta kaleng part 1"}
+.list-item:has(.data.image a[href^="/anime/38101/"]){--noteIcon:"\f249";--note:"good harem rom-com part 1"}
+.list-item:has(.data.image a[href^="/anime/38349/"]){--noteIcon:"\f249";--note:"This one is obviously better than the original episodes (non-OVA). I like how the creators gave a continuation of the storyline between Kou and Naoya."}
+.list-item:has(.data.image a[href^="/anime/38397/"]){--noteIcon:"\f249";--note:"Sensei no oppai daisukidesu!!"}
+.list-item:has(.data.image a[href^="/anime/39547/"]){--noteIcon:"\f249";--note:"complex rom-com, berat Lord, aga bikin pusing dikit sampe butuh pelukan hangat :V\A pokoke Lord Hachiman panutanqu (part 3)"}
+.list-item:has(.data.image a[href^="/anime/39783/"]){--noteIcon:"\f249";--note:"good harem rom-com part 2"}
+.list-item:has(.data.image a[href^="/anime/40591/"]){--noteIcon:"\f249";--note:"Bukan cinta kaleng part 2"}
+.list-item:has(.data.image a[href^="/anime/40750/"]){--noteIcon:"\f249";--note:"Wow, I had no idea it would be so dark and... rapey."}
+.list-item:has(.data.image a[href^="/anime/40839/"]){--noteIcon:"\f249";--note:"Actually, the story concept is pretty good. But I can't stand the MC's weaknesses."}
+.list-item:has(.data.image a[href^="/anime/41389/"]){--noteIcon:"\f249";--note:"My first impression for the first episodes of this anime is very good. Every scene is very good. They're a perfect couple. I need one ticket to Mars, please. Thank you."}
+.list-item:has(.data.image a[href^="/anime/41457/"]){--noteIcon:"\f249";--note:"Masterpiece"}
+.list-item:has(.data.image a[href^="/anime/42897/"]){--noteIcon:"\f249";--note:"good light rom-com"}
+.list-item:has(.data.image a[href^="/anime/42963/"]){--noteIcon:"\f249";--note:"This season is better than the first one. The character development is pretty good. I can't wait to watch the third season."}
+.list-item:has(.data.image a[href^="/anime/43608/"]){--noteIcon:"\f249";--note:"Bukan cinta kaleng part 3"}
+.list-item:has(.data.image a[href^="/anime/43609/"]){--noteIcon:"\f249";--note:"This OVA means KWK mesum-version"}
+.list-item:has(.data.image a[href^="/anime/43969/"]){--noteIcon:"\f249";--note:"Harem goblok, gatau lagi dah, tapi kocak sih, bole la :V"}
+.list-item:has(.data.image a[href^="/anime/45653/"]){--noteIcon:"\f249";--note:"another light but good rom-com"}
+.list-item:has(.data.image a[href^="/anime/48468/"]){--noteIcon:"\f249";--note:"Mon maap ni sensor blur tag \"Hentai\"-nya ga jalan, hehe...\A \A btw ceritanya sugoi bet ini :V"}
+.list-item:has(.data.image a[href^="/anime/48548/"]){--noteIcon:"\f249";--note:"Nice ending. Good choice, Fuutarou-kun!"}
+.list-item:has(.data.image a[href^="/anime/48569/"]){--noteIcon:"\f249";--note:"Now I should read the light novel start from vol 4"}
+.list-item:has(.data.image a[href^="/anime/48675/"]){--noteIcon:"\f249";--note:"good rom-com concept, but meh story"}
+.list-item:has(.data.image a[href^="/anime/48926/"]){--noteIcon:"\f249";--note:"bit rom nice com, great seinen story! part 1"}
+.list-item:has(.data.image a[href^="/anime/49982/"]){--noteIcon:"\f249";--note:"fyi ni carinya susah bet kaga nemu-nemu tempat \A online streaming-nya di mana :( adanya juga paling ga ada sub-nya, anime korea soale"}
+.list-item:has(.data.image a[href^="/anime/50425/"]){--noteIcon:"\f249";--note:"funny romcom"}
+.list-item:has(.data.image a[href^="/anime/50631/"]){--noteIcon:"\f249";--note:"bit rom nice com, great seinen story! part 2"}
+.list-item:has(.data.image a[href^="/anime/50634/"]){--noteIcon:"\f249";--note:"Mon maap ni sensor blur tag \"Hentai\"-nya ga jalan, hehe..."}
+.list-item:has(.data.image a[href^="/anime/52198/"]){--noteIcon:"\f249";--note:"kelanjutan dari season 3 (masa kuliah keknya)"}
+.list-item:has(.data.image a[href^="/anime/52990/"]){--noteIcon:"\f249";--note:"I'm really shocked by this. I know she's experienced, but not a virgin? Hell no. And her annoying bitchy friend acting like she's protecting the heroine from the MC doesn't really make sense."}
+.list-item:has(.data.image a[href^="/anime/58272/"]){--noteIcon:"\f249";--note:"The fact that he doesn't want to upgrade her to a more humanoid robot is sickening. Even more sickening is that he decides to make the little robot his child. Only the first 6 episodes are great tbh."}
+.list-item:has(.data.image a[href^="/manga/32909/"]){--noteIcon:"\f249";--note:"Mon maap ni sensor blur tag \"Hentai\"-nya ga jalan, hehe..."}
+.list-item:has(.data.image a[href^="/manga/120974/"]){--noteIcon:"\f249";--note:"Mon maap ni sensor blur tag \"Hentai\"-nya ga jalan, hehe..."}
+.list-item:has(.data.image a[href^="/manga/124483/"]){--noteIcon:"\f249";--note:"Mon maap ni sensor blur tag \"Hentai\"-nya ga jalan, hehe..."}
+.list-item:has(.data.image a[href^="/manga/135034/"]){--noteIcon:"\f249";--note:"Mon maap ni sensor blur tag \"Hentai\"-nya ga jalan, hehe..."}

@@ -6,6 +6,7 @@ entries are included, so the file stays small (~100 bytes per entry).
 
 Usage: python generate.py [username] [output]   (stdlib only)
 """
+import html
 import json
 import re
 import sys
@@ -53,24 +54,54 @@ def hd(path):
     return base + (".webp" if SIZE else "l.webp")
 
 
+# Public list notes: MAL only shows notes to the logged-in owner, but load.json exposes them.
+# Cards with a note get a note icon after their "#N"; hovering the number shows the note.
+NOTE_MAX = 400
+NOTE_CSS = """.data.number::after{content:var(--noteIcon,none);margin-left:5px;font:12px "FontAwesome 4";vertical-align:1px}
+.list-item .data.number:hover{z-index:40;opacity:1}
+.data.number:hover::after{content:var(--note,none);position:absolute;top:22px;left:-4px;width:186px;max-height:240px;overflow:hidden;margin:0;padding:9px 12px 11px;background:hsla(var(--bgAlt),.97);border-left:2px solid hsl(var(--accent));border-radius:0 6px 6px 0;box-shadow:0 0 3.36px 1.68px hsla(0,0%,0%,50%);color:hsl(var(--text));font:normal 12px/16px var(--font);letter-spacing:0;text-transform:none;text-shadow:none;white-space:pre-wrap;overflow-wrap:break-word}"""
+
+
+def css_string(text):
+    text = text.strip()
+    if len(text) > NOTE_MAX:
+        text = text[: NOTE_MAX - 1].rstrip() + "\u2026"
+    text = text.replace("\\", "\\\\").replace('"', '\\"').replace("\r\n", "\n").replace("\r", "\n")
+    return '"' + text.replace("\n", "\\A ") + '"'
+
+
+def note_of(it):
+    raw = it.get("editable_notes")
+    if raw is None:  # fall back to the HTML-escaped field
+        raw = html.unescape(it.get("notes") or "")
+    return raw.strip()
+
+
 def main():
-    rules = []
+    rules, notes = [], []
     for kind in ("anime", "manga"):
         items = entries(kind)
         for it in sorted(items, key=lambda i: i[f"{kind}_id"]):
+            link = f'.data.image a[href^="/{kind}/{it[kind + "_id"]}/"]'
             url = hd(it.get(f"{kind}_image_path"))
             if url:
-                rules.append(f'.data.image a[href^="/{kind}/{it[kind + "_id"]}/"]{{background-image:url({url})}}')
+                rules.append(f"{link}{{background-image:url({url})}}")
+            note = note_of(it)
+            if note:
+                notes.append(f'.list-item:has({link}){{--noteIcon:"\\f249";--note:{css_string(note)}}}')
         print(f"{kind}: {len(items)} entries", file=sys.stderr)
 
     css = (
-        f"/* Sharper covers for MAL user {USER} - {len(rules)} entries, built "
+        '@charset "UTF-8";\n'
+        f"/* Sharper covers + public notes for MAL user {USER} - {len(rules)} covers, {len(notes)} notes, built "
         f"{datetime.now(timezone.utc):%Y-%m-%d} by github.com/HaydarRizaldy/mal-covers */\n"
         + "\n".join(rules) + "\n"
+        + (NOTE_CSS + "\n" + "\n".join(notes) + "\n" if notes else "")
     )
     old = open(OUT, encoding="utf-8").read() if __import__("os").path.exists(OUT) else ""
-    # ignore the date line when deciding whether anything changed (avoids a daily no-op commit)
-    if old.split("\n", 1)[-1] == css.split("\n", 1)[-1]:
+    # ignore the header comment (it holds the build date) when deciding whether anything changed
+    body = lambda s: [l for l in s.splitlines() if not l.startswith("/*")]
+    if body(old) == body(css):
         print("no change", file=sys.stderr)
         return
     with open(OUT, "w", encoding="utf-8", newline="\n") as f:
