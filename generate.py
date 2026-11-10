@@ -68,6 +68,9 @@ body .list-block{padding-top:88px}
 body .list-unit .list-status-title .text{position:absolute;top:42px;left:0;display:block;width:calc(var(--listW) - 40px);height:16px;overflow:hidden;color:hsla(var(--text),40%);font-size:0;text-align:center;white-space:nowrap;pointer-events:auto;cursor:default;transition:color var(--timeText) var(--bezierFast)}
 body .list-unit .list-status-title .text::before{content:var(--statsText,none);font:12px/16px var(--font)}
 body .list-unit .list-status-title .text:hover{color:hsla(var(--text),100%)}
+/* the tabs' hidden 0px-font label text still takes a 30px line box that spills below each button and
+   stole the mouse from the stats line; clip the buttons to their own box */
+body #status-menu .status-button{overflow:hidden}
 @media (max-width:926px){body .list-block{padding-top:132px}body .list-unit .list-status-title .text{width:436px}}"""
 
 
