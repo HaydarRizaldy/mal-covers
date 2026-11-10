@@ -576,3 +576,22 @@
 .data.image a[href^="/manga/128634/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/manga/1/237526.webp)}
 .data.image a[href^="/manga/135034/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/manga/3/260069.webp)}
 .data.image a[href^="/manga/136979/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/manga/2/249234.webp)}
+/* status stripe along the bottom of each cover (ALL view) */
+.data.image::before{content:"";position:absolute;left:0;right:0;bottom:0;z-index:2;height:3px;background:hsl(var(--statusColor,var(--accent)));opacity:0}
+[data-query*='"status":7'] .data.image::before{opacity:.95}
+.list-item:has(.data.status:is(.watching,.reading)){--statusColor:var(--current)}
+.list-item:has(.data.status.completed){--statusColor:var(--completed)}
+.list-item:has(.data.status.onhold){--statusColor:var(--paused)}
+.list-item:has(.data.status.dropped){--statusColor:var(--dropped)}
+.list-item:has(.data.status[class*="planto"]){--statusColor:var(--planned)}
+/* dim Plan-to-watch covers in the ALL view so watched entries stand out; full colour on hover */
+.data.image{transition:filter calc(var(--timeItem)*2) var(--bezierFast)}
+[data-query*='"status":7'] .list-item:not(:hover):has(.data.status[class*="planto"]) .data.image{filter:saturate(.3) brightness(.62)}
+/* UPDATED chip under the #number for recently changed entries */
+.data.image::after{content:var(--updated,none);position:absolute;top:33px;left:12px;z-index:2;padding:1px 6px;background:hsl(var(--accent));border-radius:3px;box-shadow:0 1px 4px hsla(0,0%,0%,50%);color:hsl(var(--bg));font:bold 9.5px/14px var(--font);letter-spacing:1px}
+/* list stats above the footer: highlight on hover like the copyright line */
+#footer-block{pointer-events:none}
+#footer-block #copyright{pointer-events:auto}
+.list-unit .list-stats{transition:color var(--timeText) var(--bezierFast)}
+.list-unit .list-stats:hover{color:hsla(var(--text),100%)}
+.list-item:has(.data.image a[href^="/anime/37021/"]){--updated:"UPDATED"}
