@@ -55,15 +55,27 @@ def hd(path):
 
 
 # Public list notes: MAL only shows notes to the logged-in owner, but load.json exposes them.
-# Cards with a note get a "NOTES" label after their "#N"; hovering it shows the note.
-# The label never changes on hover and the panel is drawn on a different element
-# (.list-table-data::after, pointer-events:none), so nothing moves under the cursor.
+# Visitors: a NOTES button beside ADD / MORE (only on cards that have a note). Clicking it opens a
+# read-only note panel styled like Brink's MORE panel; clicking the panel, MORE, or leaving the card closes it.
+# No JS is possible in MAL custom CSS, so:
+#  - the button is MAL's empty status cell (td.data.status, hidden by Brink) re-shown and labelled;
+#  - "click to open, stay open" is a CSS latch: :active shows the panel instantly, and while the card is
+#    hovered the transition back to hidden is delayed for a day; leaving the card hides it at once.
+#    The latch hides with `collapse` and the resting state with `hidden` on purpose: if both used the same
+#    value, the browser would keep the pending day-long transition when the mouse leaves (same end value).
+#    No opacity fade: a click shorter than the fade would freeze it half-way.
+# Owner (data-owner="1"): Brink already shows MAL's own NOTES button + inline editor (saves to MAL);
+# we only enlarge its text to match.
 NOTE_MAX = 400
-NOTE_CSS = """.data.number::after{content:var(--noteLabel,none);margin-left:6px;color:hsl(var(--accent));font:bold 10px/15px var(--font);letter-spacing:1px;vertical-align:top}
-.list-item .data.number:hover{opacity:1}
-.list-table-data:has(.data.number:hover)::after{content:var(--note,none);position:absolute;top:34px;left:8px;z-index:40;width:194px;max-height:240px;overflow:hidden;padding:9px 12px 11px;background:hsla(var(--bgAlt),.97);border-left:2px solid hsl(var(--accent));border-radius:0 6px 6px 0;box-shadow:0 0 3.36px 1.68px hsla(0,0%,0%,50%);color:hsl(var(--text));font:normal 12px/16px var(--font);text-align:left;text-shadow:none;white-space:pre-wrap;overflow-wrap:break-word;direction:ltr;pointer-events:none}
-[data-owner=""] .add-edit-more:not(:active):after{content:none}
-[data-owner="1"] .data.number::after,[data-owner="1"] .list-table-data:has(.data.number:hover)::after{content:none}"""
+NOTE_CSS = """[data-owner=""] .add-edit-more:not(:active):after{content:none}
+[data-owner=""] .list-table .list-table-data .data.status{display:block;position:absolute;top:7.5px;left:66.5px;z-index:3;width:auto;height:auto;padding:0;background:none;cursor:pointer}
+[data-owner=""] .data.status::before{content:var(--noteLabel,none);display:block;padding:4.5px;color:hsl(var(--text));font:12px/15px var(--font);letter-spacing:1px;text-transform:uppercase;transition:color var(--timeText) var(--bezierFast)}
+[data-owner=""] .data.status:hover::before,[data-owner=""] .list-item:hover .list-table-data:has(.data.status:active) .data.status::before{color:hsl(var(--textLinkHov))}
+[data-owner=""] .list-table-data::after{content:var(--note,none);position:absolute;left:0;top:37px;z-index:30;width:100%;height:calc(100% - 37px);padding:12px 15px;background:hsla(var(--bgAlt),.96);border-radius:6px 6px 0 0;box-shadow:0 0 3.36px 1.68px hsla(0,0%,0%,50%);-webkit-backdrop-filter:blur(var(--imageBlurHov));backdrop-filter:blur(var(--imageBlurHov));color:hsl(var(--text));font:14px/20px var(--font);text-align:left;text-shadow:none;white-space:pre-wrap;overflow:hidden;overflow-wrap:break-word;direction:ltr;cursor:pointer;visibility:hidden;transition:none}
+[data-owner=""] .list-item:hover .list-table-data::after{visibility:collapse;transition:visibility 0s 86400s}
+[data-owner=""] .list-item:hover .list-table-data:has(.data.status:active)::after{visibility:visible;transition:none}
+[data-owner=""] .list-item:hover .list-table-data:active:not(:has(.data.status:active))::after{visibility:collapse;transition:none}
+[data-owner="1"] .notes .text,[data-owner="1"] .notes textarea{font-size:14px;line-height:20px;max-height:255px}"""
 
 
 def css_string(text):
@@ -92,7 +104,7 @@ def main():
                 rules.append(f"{link}{{background-image:url({url})}}")
             note = note_of(it)
             if note:
-                notes.append(f'.list-item:has({link}){{--noteLabel:"NOTES";--note:{css_string(note)}}}')
+                notes.append(f'.list-item:has({link}){{--noteLabel:"Notes";--note:{css_string(note)}}}')
         print(f"{kind}: {len(items)} entries", file=sys.stderr)
 
     css = (
