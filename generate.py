@@ -27,6 +27,7 @@ UPDATED_DAYS = 7  # entries changed within this many days get an "UPDATED" chip 
 # Bulk tag edit on 2026-11-10 bumped updated_at on ~212 entries; ignore changes up to the end of that run
 # so the chip only marks real updates. (Harmless once 7 days have passed.)
 UPDATED_NOT_BEFORE = 1794306500  # end of the bulk tag run (2026-11-10)
+GEM_DIFF = 2.0  # your score this far above MAL's average turns the TOP RATED tab into "HIDDEN GEM"
 UA = {"User-Agent": "mal-covers (github.com/HaydarRizaldy/mal-covers)"}
 
 # Top-8 tags (by frequency in this list) -> validated dark categorical palette, fixed slot order
@@ -47,7 +48,7 @@ EXTRA_CSS = """/* status stripe along the bottom of each cover (ALL view) */
 .list-item:has(.data.status[class*="planto"]){--statusColor:var(--planned)}
 /* dim Plan-to-watch covers in the ALL view so watched entries stand out; full colour on hover */
 .data.image{transition:filter calc(var(--timeItem)*2) var(--bezierFast)}
-[data-query*='"status":7'] .list-item:not(:hover):has(.data.status[class*="planto"]) .data.image{filter:saturate(.3) brightness(.62)}
+[data-query*='"status":7'] .list-item:not(:hover):not(:focus-within):has(.data.status[class*="planto"]) .data.image{filter:saturate(.3) brightness(.62)}
 /* UPDATED chip under the #number for recently changed entries */
 .data.image::after{content:var(--updated,none);position:absolute;top:33px;left:12px;z-index:2;padding:1px 6px;background:hsl(var(--accent));border-radius:3px;box-shadow:0 1px 4px hsla(0,0%,0%,50%);color:hsl(var(--bg));font:bold 9.5px/14px var(--font);letter-spacing:1px}
 /* your score vs MAL, in the hover info: "+2.6 above" / "MAL: 7.40" (per-entry --diff / --diffColor) */
@@ -74,6 +75,25 @@ body .list-unit .list-status-title .text:hover{color:hsla(var(--text),100%)}
 /* the tabs' hidden 0px-font label text still takes a 30px line box that spills below each button and
    stole the mouse from the stats line; clip the buttons to their own box */
 body #status-menu .status-button{overflow:hidden}
+/* favourites first (default sort only; a chosen Order puts "order" into data-query) */
+body:not([data-query*='"order"']) .list-item:has(.data.tags a[href*="=Favourite"]){order:-1}
+/* hidden gems: per-entry --topLabel/--gemRated/--gemToggle turn the TOP RATED tab into a lavender HIDDEN GEM tab */
+body .data :is(.score-8,.score-9,.score-10)::after{content:var(--topLabel,"\\f005  TOP RATED")}
+body .data .score-10{--rated:var(--gemRated,var(--goldRating))}
+body .data .score-9{--rated:var(--gemRated,var(--silverRating));--toggle:var(--gemToggle,var(--toggleTopRatingSilver))}
+body .data .score-8{--rated:var(--gemRated,var(--bronzeRating));--toggle:var(--gemToggle,var(--toggleTopRatingBronze))}
+/* keyboard: show a card's details while anything inside it has focus, like hover does */
+.list-item:focus-within{transform:scale(1)}
+.list-item:focus-within .data:not(.image),.list-item:focus-within .add-edit-more,.list-item:focus-within .notes,.list-item:focus-within .malicon,.list-item:focus-within .data.tags a{opacity:1}
+.list-item:focus-within .data.image .link{filter:brightness(var(--imageBrightnessHov)) opacity(var(--imageBrightnessHov)) blur(var(--imageBlurHov))}
+.list-item:focus-within .data.tags span a[href*="=Favourite"]:not(:focus){opacity:0}
+.list-item :focus-visible{outline:2px solid hsl(var(--accent));outline-offset:2px;border-radius:3px}
+/* reduced motion: no card zoom, no blur; near-zero durations (delays kept, so the NOTES click latch still works) */
+@media (prefers-reduced-motion:reduce){
+body .list-item,body .list-item:is(:hover,:focus-within){transform:scale(.95)}
+body .list-item:is(:hover,:focus-within) .data.image .link{filter:brightness(var(--imageBrightnessHov)) opacity(var(--imageBrightnessHov))}
+body .more-content,body .notes .text,body .notes textarea{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
 @media (max-width:926px){body .list-block{padding-top:132px}body .list-unit .list-status-title .text{width:436px}}"""
 
 
@@ -160,6 +180,8 @@ def main():
                 else:
                     txt, col = "\\00B1 0 same as", "var(--planned)"
                 props.append(f'--diff:"{txt}\\A ";--diffColor:{col}')
+                if round(float(diff), 2) >= GEM_DIFF:
+                    props.append('--topLabel:"\\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible')
             if props:
                 per_entry.append(f".list-item:has({link}){{{';'.join(props)}}}")
         scored = [it["score"] for it in items if it.get("score")]

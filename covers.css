@@ -586,7 +586,7 @@
 .list-item:has(.data.status[class*="planto"]){--statusColor:var(--planned)}
 /* dim Plan-to-watch covers in the ALL view so watched entries stand out; full colour on hover */
 .data.image{transition:filter calc(var(--timeItem)*2) var(--bezierFast)}
-[data-query*='"status":7'] .list-item:not(:hover):has(.data.status[class*="planto"]) .data.image{filter:saturate(.3) brightness(.62)}
+[data-query*='"status":7'] .list-item:not(:hover):not(:focus-within):has(.data.status[class*="planto"]) .data.image{filter:saturate(.3) brightness(.62)}
 /* UPDATED chip under the #number for recently changed entries */
 .data.image::after{content:var(--updated,none);position:absolute;top:33px;left:12px;z-index:2;padding:1px 6px;background:hsl(var(--accent));border-radius:3px;box-shadow:0 1px 4px hsla(0,0%,0%,50%);color:hsl(var(--bg));font:bold 9.5px/14px var(--font);letter-spacing:1px}
 /* your score vs MAL, in the hover info: "+2.6 above" / "MAL: 7.40" (per-entry --diff / --diffColor) */
@@ -613,6 +613,25 @@ body .list-unit .list-status-title .text:hover{color:hsla(var(--text),100%)}
 /* the tabs' hidden 0px-font label text still takes a 30px line box that spills below each button and
    stole the mouse from the stats line; clip the buttons to their own box */
 body #status-menu .status-button{overflow:hidden}
+/* favourites first (default sort only; a chosen Order puts "order" into data-query) */
+body:not([data-query*='"order"']) .list-item:has(.data.tags a[href*="=Favourite"]){order:-1}
+/* hidden gems: per-entry --topLabel/--gemRated/--gemToggle turn the TOP RATED tab into a lavender HIDDEN GEM tab */
+body .data :is(.score-8,.score-9,.score-10)::after{content:var(--topLabel,"\f005  TOP RATED")}
+body .data .score-10{--rated:var(--gemRated,var(--goldRating))}
+body .data .score-9{--rated:var(--gemRated,var(--silverRating));--toggle:var(--gemToggle,var(--toggleTopRatingSilver))}
+body .data .score-8{--rated:var(--gemRated,var(--bronzeRating));--toggle:var(--gemToggle,var(--toggleTopRatingBronze))}
+/* keyboard: show a card's details while anything inside it has focus, like hover does */
+.list-item:focus-within{transform:scale(1)}
+.list-item:focus-within .data:not(.image),.list-item:focus-within .add-edit-more,.list-item:focus-within .notes,.list-item:focus-within .malicon,.list-item:focus-within .data.tags a{opacity:1}
+.list-item:focus-within .data.image .link{filter:brightness(var(--imageBrightnessHov)) opacity(var(--imageBrightnessHov)) blur(var(--imageBlurHov))}
+.list-item:focus-within .data.tags span a[href*="=Favourite"]:not(:focus){opacity:0}
+.list-item :focus-visible{outline:2px solid hsl(var(--accent));outline-offset:2px;border-radius:3px}
+/* reduced motion: no card zoom, no blur; near-zero durations (delays kept, so the NOTES click latch still works) */
+@media (prefers-reduced-motion:reduce){
+body .list-item,body .list-item:is(:hover,:focus-within){transform:scale(.95)}
+body .list-item:is(:hover,:focus-within) .data.image .link{filter:brightness(var(--imageBrightnessHov)) opacity(var(--imageBrightnessHov))}
+body .more-content,body .notes .text,body .notes textarea{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
 @media (max-width:926px){body .list-block{padding-top:132px}body .list-unit .list-status-title .text{width:436px}}
 /* tag colours (icon only) */
 body .data.tags span a[href$="tag=Romance"]::after{color:#3987e5}
@@ -643,7 +662,7 @@ body.manga{--chartLabel:none;--statsText:"Chapters: 0, Volumes: 0, Days: 0, Mean
 .list-item:has(.data.image a[href^="/anime/11887/"]){--diff:"+1.3 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/12531/"]){--diff:"+1.7 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/13759/"]){--diff:"+2.0 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/14813/"]){--diff:"+2.0 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/14813/"]){--diff:"+2.0 above\A ";--diffColor:var(--current);--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
 .list-item:has(.data.image a[href^="/anime/15451/"]){--diff:"\2212 0.5 below\A ";--diffColor:var(--dropped)}
 .list-item:has(.data.image a[href^="/anime/15583/"]){--diff:"\2212 2.1 below\A ";--diffColor:var(--dropped)}
 .list-item:has(.data.image a[href^="/anime/16001/"]){--diff:"+1.1 above\A ";--diffColor:var(--current)}
@@ -691,7 +710,7 @@ body.manga{--chartLabel:none;--statsText:"Chapters: 0, Volumes: 0, Days: 0, Mean
 .list-item:has(.data.image a[href^="/anime/33286/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/33352/"]){--diff:"+1.3 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/33487/"]){--diff:"+0.2 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/34134/"]){--diff:"+2.5 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/34134/"]){--diff:"+2.5 above\A ";--diffColor:var(--current);--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
 .list-item:has(.data.image a[href^="/anime/34281/"]){--diff:"\2212 0.2 below\A ";--diffColor:var(--dropped)}
 .list-item:has(.data.image a[href^="/anime/34577/"]){--diff:"+0.5 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/34626/"]){--diff:"\00B1 0 same as\A ";--diffColor:var(--planned)}
@@ -708,7 +727,7 @@ body.manga{--chartLabel:none;--statsText:"Chapters: 0, Volumes: 0, Days: 0, Mean
 .list-item:has(.data.image a[href^="/anime/36871/"]){--diff:"+0.3 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/36882/"]){--diff:"+0.3 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/36885/"]){--diff:"+1.6 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/37021/"]){--diff:"+4.3 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/37021/"]){--diff:"+4.3 above\A ";--diffColor:var(--current);--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
 .list-item:has(.data.image a[href^="/anime/37210/"]){--diff:"+0.2 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/37347/"]){--diff:"+0.8 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/37450/"]){--diff:"\2212 0.2 below\A ";--diffColor:var(--dropped)}
@@ -743,7 +762,7 @@ body.manga{--chartLabel:none;--statsText:"Chapters: 0, Volumes: 0, Days: 0, Mean
 .list-item:has(.data.image a[href^="/anime/40787/"]){--diff:"+0.6 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/40839/"]){--diff:"+0.2 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/41025/"]){--diff:"+1.6 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/41389/"]){--diff:"+2.2 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/41389/"]){--diff:"+2.2 above\A ";--diffColor:var(--current);--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
 .list-item:has(.data.image a[href^="/anime/41457/"]){--diff:"+1.6 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/41623/"]){--diff:"+0.3 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/41710/"]){--diff:"\2212 0.2 below\A ";--diffColor:var(--dropped)}
@@ -794,8 +813,8 @@ body.manga{--chartLabel:none;--statsText:"Chapters: 0, Volumes: 0, Days: 0, Mean
 .list-item:has(.data.image a[href^="/anime/50461/"]){--diff:"\2212 0.3 below\A ";--diffColor:var(--dropped)}
 .list-item:has(.data.image a[href^="/anime/50593/"]){--diff:"+1.0 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/50631/"]){--diff:"\00B1 0 same as\A ";--diffColor:var(--planned)}
-.list-item:has(.data.image a[href^="/anime/50739/"]){--diff:"+2.2 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/50854/"]){--diff:"+2.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/50739/"]){--diff:"+2.2 above\A ";--diffColor:var(--current);--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
+.list-item:has(.data.image a[href^="/anime/50854/"]){--diff:"+2.6 above\A ";--diffColor:var(--current);--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
 .list-item:has(.data.image a[href^="/anime/51009/"]){--diff:"\2212 0.7 below\A ";--diffColor:var(--dropped)}
 .list-item:has(.data.image a[href^="/anime/51019/"]){--diff:"+1.9 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/51096/"]){--diff:"\00B1 0 same as\A ";--diffColor:var(--planned)}
@@ -810,7 +829,7 @@ body.manga{--chartLabel:none;--statsText:"Chapters: 0, Volumes: 0, Days: 0, Mean
 .list-item:has(.data.image a[href^="/anime/52299/"]){--diff:"\2212 0.1 below\A ";--diffColor:var(--dropped)}
 .list-item:has(.data.image a[href^="/anime/52305/"]){--diff:"\2212 1.7 below\A ";--diffColor:var(--dropped)}
 .list-item:has(.data.image a[href^="/anime/52347/"]){--diff:"\2212 2.1 below\A ";--diffColor:var(--dropped)}
-.list-item:has(.data.image a[href^="/anime/52367/"]){--diff:"+2.8 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/52367/"]){--diff:"+2.8 above\A ";--diffColor:var(--current);--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
 .list-item:has(.data.image a[href^="/anime/52578/"]){--diff:"+1.8 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/52741/"]){--diff:"+1.3 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/52830/"]){--diff:"\2212 0.3 below\A ";--diffColor:var(--dropped)}
@@ -823,13 +842,13 @@ body.manga{--chartLabel:none;--statsText:"Chapters: 0, Volumes: 0, Days: 0, Mean
 .list-item:has(.data.image a[href^="/anime/53411/"]){--diff:"+0.9 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/53434/"]){--diff:"\2212 0.3 below\A ";--diffColor:var(--dropped)}
 .list-item:has(.data.image a[href^="/anime/53632/"]){--diff:"+1.4 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/53802/"]){--diff:"+2.6 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/54234/"]){--diff:"+2.8 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/53802/"]){--diff:"+2.6 above\A ";--diffColor:var(--current);--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
+.list-item:has(.data.image a[href^="/anime/54234/"]){--diff:"+2.8 above\A ";--diffColor:var(--current);--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
 .list-item:has(.data.image a[href^="/anime/54265/"]){--diff:"\2212 1.1 below\A ";--diffColor:var(--dropped)}
 .list-item:has(.data.image a[href^="/anime/54275/"]){--diff:"+0.3 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/54714/"]){--diff:"\2212 1.7 below\A ";--diffColor:var(--dropped)}
 .list-item:has(.data.image a[href^="/anime/54744/"]){--diff:"\2212 3.5 below\A ";--diffColor:var(--dropped)}
-.list-item:has(.data.image a[href^="/anime/54853/"]){--diff:"+2.6 above\A ";--diffColor:var(--current)}
+.list-item:has(.data.image a[href^="/anime/54853/"]){--diff:"+2.6 above\A ";--diffColor:var(--current);--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
 .list-item:has(.data.image a[href^="/anime/54855/"]){--diff:"\2212 6.3 below\A ";--diffColor:var(--dropped)}
 .list-item:has(.data.image a[href^="/anime/54857/"]){--diff:"+1.6 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/55129/"]){--diff:"+0.1 above\A ";--diffColor:var(--current)}
