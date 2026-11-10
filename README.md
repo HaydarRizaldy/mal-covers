@@ -16,5 +16,5 @@ Use it in the list's Custom CSS (MAL style: escaped `@\import`, at the top):
 
 Refresh now: Actions → "Update covers" → Run workflow.
 
-Note: GitHub turns off scheduled workflows after 60 days with no repository activity. If the list doesn't
-change for that long, re-enable it from the Actions tab (GitHub emails a warning first).
+GitHub turns off scheduled workflows after 60 days with no repository activity. To prevent that, the job
+pushes an empty "Keep daily update alive" commit whenever nothing has been committed for 50 days.
