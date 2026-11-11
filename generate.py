@@ -42,17 +42,23 @@ TAG_RINGS = [("Fantasy", "#3987e5"), ("Harem", "#d95926"), ("Isekai", "#199e70")
 CHART_FILL = "hsl(243,32%,78%)"  # theme accent (Twilight Indigo lavender); single series -> single hue
 
 # Theme extras that live here instead of the MAL custom CSS (which is near MAL's length cap).
-EXTRA_CSS = """/* status stripe along the bottom of each cover (ALL view) */
-.data.image::before{content:"";position:absolute;left:0;right:0;bottom:0;z-index:2;height:3px;background:hsl(var(--statusColor,var(--accent)));opacity:0}
-[data-query*='"status":7'] .data.image::before{opacity:.95}
-.list-item:has(.data.status:is(.watching,.reading)){--statusColor:var(--current)}
-.list-item:has(.data.status.completed){--statusColor:var(--completed)}
-.list-item:has(.data.status.onhold){--statusColor:var(--paused)}
-.list-item:has(.data.status.dropped){--statusColor:var(--dropped)}
-.list-item:has(.data.status[class*="planto"]){--statusColor:var(--planned)}
+EXTRA_CSS = """/* PERFORMANCE: avoid :has() wherever a plain selector can reach the target (it made every card re-check cost
+   ~260 subtree searches); off-screen cards skip style/layout/paint entirely (content-visibility), so a global
+   switch only restyles the cards on screen. overflow-clip-margin keeps tabs/glows that stick out of a card visible. */
+body .list-item{content-visibility:auto;contain-intrinsic-size:auto 210px auto 300px;overflow-clip-margin:24px}
+/* status stripe (ALL view) + progress bar (Current/Paused, every tab): drawn as an extra layer of the cover's fade
+   overlay (.link::before). Colour comes from the status cell that precedes the image cell (no :has); --prog/--progOn
+   are set on the cover link itself by the daily per-entry rule. */
+body[data-query*='"status":7']{--allView:1}
+.data.status:is(.watching,.reading)~.data.image{--statusColor:var(--current)}
+.data.status.completed~.data.image{--statusColor:var(--completed)}
+.data.status.onhold~.data.image{--statusColor:var(--paused)}
+.data.status.dropped~.data.image{--statusColor:var(--dropped)}
+.data.status[class*="planto"]~.data.image{--statusColor:var(--planned)}
+body .data.image .link::before{background:linear-gradient(to right,hsla(var(--statusColor,var(--accent)),calc(.95 * max(var(--progOn,0),var(--allView,0)))) var(--prog,100%),hsla(var(--text),calc(.18 * var(--progOn,0))) var(--prog,100%)) left bottom/100% 3px no-repeat,linear-gradient(to top,hsla(var(--bg),var(--imageFade)) 0,hsla(var(--bg),calc(var(--imageFade) * .6)) 20%,transparent 45%)}
 /* dim Plan-to-watch covers in the ALL view so watched entries stand out; full colour on hover */
 .data.image{transition:filter calc(var(--timeItem)*2) var(--bezierFast)}
-[data-query*='"status":7'] .list-item:not(:hover):not(:focus-within):has(.data.status[class*="planto"]) .data.image{filter:saturate(.3) brightness(.62)}
+[data-query*='"status":7'] .list-item:not(:hover):not(:focus-within) .data.status[class*="planto"]~.data.image{filter:saturate(.3) brightness(.62)}
 /* UPDATED chip under the #number for recently changed entries */
 .data.image::after{content:var(--updated,none);position:absolute;top:33px;left:12px;z-index:2;padding:1px 6px;background:hsl(var(--accent));border-radius:3px;box-shadow:0 1px 4px hsla(0,0%,0%,50%);color:hsl(var(--bg));font:bold 9.5px/14px var(--font);letter-spacing:1px}
 /* your score vs MAL, in the hover info: "+2.6 above" / "MAL: 7.40" (per-entry --diff / --diffColor) */
@@ -116,11 +122,28 @@ body .list-unit .loading-space{pointer-events:none}
    is delayed a day, so it holds. It inherits, so cards MAL loads later follow it. Not remembered on reload.
    (Nested :has() is invalid, so JP = "link active" and ENG wins by specificity when its <i> is active.) */
 @property --en{syntax:'<number>';inherits:true;initial-value:0}
-body{--en:0;transition:--en 0s 86400s}
-body:has(#show-stats-button:active){--en:0;transition:none}
-body:has(#show-stats-button i:active){--en:1;transition:none}
-body .data.title .link{font-size:calc(13px - 13px * var(--en) * var(--hasEn,0)) !important}
-body .data.title .link::before{content:var(--tEn,"");font-size:calc(13px * var(--en))}
+@property --fav{syntax:'<integer>';inherits:true;initial-value:0}
+/* two latches share body's transition list (an explicit OFF sets -1, not 0: if it set 0, the same value the
+   pending day-long transition is heading to, the browser would keep that transition and never apply the click): each click rule makes only ITS property instant and keeps the other's
+   day-long delay listed, so switching language never resets favourites-first (and vice versa) */
+body{--en:0;--fav:0;transition:--en 0s 86400s,--fav 0s 86400s}
+/* effective on/off values (an explicit OFF is stored as -1, see above) */
+body{--E:max(var(--en),0);--F:max(var(--fav),0)}
+body:has(#show-stats-button:active){--en:-1;transition:--en 0s,--fav 0s 86400s}
+body:has(#show-stats-button i:active){--en:1;transition:--en 0s,--fav 0s 86400s}
+/* favourites-first, chosen from the Order menu: Brink-hidden header cells reused as two menu items
+   ("#" cell = "Favourites first", empty status cell = "Default order"); they are plain text, so clicks do nothing in MAL */
+body:has(.list-table-header .header-title.number:active){--fav:1;transition:--en 0s 86400s,--fav 0s}
+body:has(.list-table-header .header-title.status:active){--fav:-1;transition:--en 0s 86400s,--fav 0s}
+body .list-item:has(.data.tags a[href*="=Favourite"]){order:calc(-1 * var(--F))}
+body .list-table .list-table-header .header-title:is(.number,.status){display:block !important;order:-1;font-size:0 !important;cursor:pointer}
+body .list-table .list-table-header .header-title:is(.number,.status)::before{display:block;height:32px;padding:0 8px;border-left:2px solid hsl(var(--btn));border-right:2px solid transparent;color:hsl(var(--text));font:13px/30px var(--font);text-align:center;white-space:nowrap;transition:all var(--timeButton) var(--bezierFast)}
+body .list-table .list-table-header .header-title.number::before{content:"\\f004  Favourites first";background:hsla(var(--accent),calc(.22 * var(--F)));border-left-color:hsla(var(--accent),var(--F))}
+body .list-table .list-table-header .header-title.status::before{content:"Default order";background:hsla(var(--accent),calc(.22 - .22 * var(--F)));border-left-color:hsla(var(--accent),calc(1 - var(--F)))}
+body .list-table .list-table-header .header-title.status{border-bottom:1px solid hsla(var(--text),.12)}
+body .list-table .list-table-header .header-title:is(.number,.status):hover::before{background:hsla(var(--btnLight));border-left-color:hsl(var(--btnAccent))}
+body .data.title .link{font-size:calc(13px - 13px * var(--E) * var(--hasEn,0)) !important}
+body .data.title .link::before{content:var(--tEn,"");font-size:calc(13px * var(--E))}
 body .list-unit .list-status-title .stats{display:block}
 body .list-unit .list-status-title .stats{display:block}
 body .list-unit .list-status-title .stats #show-stats-button{position:absolute;top:0;left:calc(178px + 0.07 * (var(--listW) - 980px));display:flex !important;align-items:stretch;width:calc(94px + 0.035 * (var(--listW) - 980px));height:32px;padding:0;margin:0;background:linear-gradient(225deg,hsla(var(--btnLight)) 20px,hsl(var(--btn)) 20px) hsl(var(--btn)) !important;border:2px solid hsl(var(--btn));border-radius:3px;box-shadow:-0.5px 0.7px 2.1px hsla(0,0%,0%,35%);font-size:0;isolation:isolate;overflow:hidden;gap:0;cursor:pointer;transition:border-color var(--timeButton) var(--bezierFast)}
@@ -129,8 +152,8 @@ body .list-unit .list-status-title .stats #show-stats-button:hover{border-color:
    Font Awesome legacy CSS forces its icon font on <i> with !important (that is why ENG and JP looked different) */
 body #show-stats-button i,body #show-stats-button::before{content:"";flex:1;display:block;font-family:var(--font) !important;-webkit-font-smoothing:auto;font-size:0;transition:filter var(--timeButtonLarge) var(--bezierSmooth)}
 body #show-stats-button i::before{content:"" !important;font-family:var(--font) !important}
-body #show-stats-button i{order:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3CclipPath id='s'%3E%3Crect width='60' height='30'/%3E%3C/clipPath%3E%3CclipPath id='t'%3E%3Cpath d='M30,15h30v15zv15h-30zh-30v-15zv-15h30z'/%3E%3C/clipPath%3E%3Cg clip-path='url(%23s)'%3E%3Cpath d='M0,0v30h60v-30z' fill='%23012169'/%3E%3Cpath d='M0,0L60,30M60,0L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0L60,30M60,0L0,30' clip-path='url(%23t)' stroke='%23C8102E' stroke-width='4'/%3E%3Cpath d='M30,0v30M0,15h60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0v30M0,15h60' stroke='%23C8102E' stroke-width='6'/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat;filter:brightness(calc(.35 + .65 * var(--en))) saturate(calc(.4 + .6 * var(--en)))}
-body #show-stats-button::before{order:1;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 20'%3E%3Crect width='30' height='20' fill='%23fff'/%3E%3Ccircle cx='15' cy='10' r='6' fill='%23bc002d'/%3E%3C/svg%3E") center/cover no-repeat;filter:brightness(calc(1 - .65 * var(--en))) saturate(calc(1 - .6 * var(--en)))}
+body #show-stats-button i{order:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3CclipPath id='s'%3E%3Crect width='60' height='30'/%3E%3C/clipPath%3E%3CclipPath id='t'%3E%3Cpath d='M30,15h30v15zv15h-30zh-30v-15zv-15h30z'/%3E%3C/clipPath%3E%3Cg clip-path='url(%23s)'%3E%3Cpath d='M0,0v30h60v-30z' fill='%23012169'/%3E%3Cpath d='M0,0L60,30M60,0L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0L60,30M60,0L0,30' clip-path='url(%23t)' stroke='%23C8102E' stroke-width='4'/%3E%3Cpath d='M30,0v30M0,15h60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0v30M0,15h60' stroke='%23C8102E' stroke-width='6'/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat;filter:brightness(calc(.35 + .65 * var(--E))) saturate(calc(.4 + .6 * var(--E)))}
+body #show-stats-button::before{order:1;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 20'%3E%3Crect width='30' height='20' fill='%23fff'/%3E%3Ccircle cx='15' cy='10' r='6' fill='%23bc002d'/%3E%3C/svg%3E") center/cover no-repeat;filter:brightness(calc(1 - .65 * var(--E))) saturate(calc(1 - .6 * var(--E)))}
 body #show-stats-button::after{content:none}
 /* at mid widths the centred tab row would run into the switch: pad its left side so the tabs sit in the free space
    between the switch and the search box. Padding (not position/left) keeps the search box where Brink puts it. */
@@ -152,10 +175,6 @@ body #status-menu.fixed~.list-block .list-unit::before{opacity:1}
 body #status-menu.fixed::after{opacity:0}
 /* search box stays in the sticky tab bar when scrolled (Brink fades it out), level with the tabs */
 body #status-menu.fixed .search-container{opacity:1;translate:none;top:10px}
-/* progress: for Current / Paused entries the bottom status stripe becomes a progress bar (filled part in the
-   status colour, rest dim) in every tab; --prog comes from the daily list data, so it can lag up to a day */
-body .data.image::before{opacity:calc(var(--progOn,0) * .95);background:linear-gradient(to right,hsl(var(--statusColor,var(--accent))) var(--prog,100%),hsla(var(--text),.18) var(--prog,100%))}
-body [data-query*='"status":7'] .data.image::before{opacity:.95}
 /* special tags: gold trophy badge for Award-winning (top-right; on favourite cards stacked under the ribbon; hidden
    on hover like it), soft rose glow around Heart-touching cards. The badge is drawn by MAL's empty, hidden status cell (not by the
    tag link), so "Award-winning" still shows by name in the hover tag list, with a gold trophy icon. */
@@ -271,8 +290,17 @@ def main():
         for it in sorted(items, key=lambda i: i[f"{kind}_id"]):
             link = f'.data.image a[href^="/{kind}/{it[kind + "_id"]}/"]'
             url = hd(it.get(f"{kind}_image_path"))
-            if url:
-                rules.append(f"{link}{{background-image:url({url})}}")
+            # per-entry data, attached WITHOUT :has() where possible (see PERFORMANCE note in EXTRA_CSS):
+            #  - on the cover link itself (cover image, progress bar values)
+            #  - on the MAL-score cell via the tag cell's unique id (#tags-<id> precedes it; anime only, manga has neither)
+            #  - only the few rare values that must reach cells before the tags (UPDATED, HIDDEN GEM, airing) keep :has()
+            link_props = [f"background-image:url({url})"] if url else []
+            done_n = it.get("num_watched_episodes" if kind == "anime" else "num_read_chapters") or 0
+            total_n = it.get("anime_num_episodes" if kind == "anime" else "manga_num_chapters") or 0
+            if it.get("status") in (1, 3) and total_n:
+                link_props.append(f"--prog:{min(100.0, 100.0 * done_n / total_n):.1f}%;--progOn:1")
+            if link_props:
+                rules.append(f"{link}{{{';'.join(link_props)}}}")
             props = []
             if (it.get("updated_at") or 0) > cutoff:
                 props.append('--updated:"UPDATED"')
@@ -285,13 +313,10 @@ def main():
                     txt, col = f"\\2212 {abs(d):.1f} below", "var(--dropped)"
                 else:
                     txt, col = "\\00B1 0 same as", "var(--planned)"
-                props.append(f'--diff:"{txt}\\A ";--diffColor:{col}')
+                if kind == "anime":
+                    per_entry.append(f'body.anime #tags-{it["anime_id"]}~.data.mal_score{{--diff:"{txt}\\A ";--diffColor:{col}}}')
                 if round(float(diff), 2) >= GEM_DIFF:
                     props.append('--topLabel:"\\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible')
-            done_n = it.get("num_watched_episodes" if kind == "anime" else "num_read_chapters") or 0
-            total_n = it.get("anime_num_episodes" if kind == "anime" else "manga_num_chapters") or 0
-            if it.get("status") in (1, 3) and total_n:
-                props.append(f"--prog:{min(100.0, 100.0 * done_n / total_n):.1f}%;--progOn:1")
             if kind == "anime" and it.get("status") == 1 and it.get("anime_airing_status") == 1:
                 airs = broadcast_wib(it["anime_id"])
                 time.sleep(2)
