@@ -616,8 +616,6 @@ body .list-unit .list-status-title .text{position:absolute;top:42px;left:0;width
 /* the tabs' hidden 0px-font label text still takes a 30px line box that spills below each button and
    stole the mouse from the stats line; clip the buttons to their own box */
 body #status-menu .status-button{overflow:hidden}
-/* favourites first (default sort only; a chosen Order puts "order" into data-query) */
-body:not([data-query*='"order"']) .list-item:has(.data.tags a[href*="=Favourite"]){order:-1}
 /* hidden gems: per-entry --topLabel/--gemRated/--gemToggle turn the TOP RATED tab into a lavender HIDDEN GEM tab */
 body .data :is(.score-8,.score-9,.score-10)::after{content:var(--topLabel,"\f005  TOP RATED")}
 body .data .score-10{--rated:var(--gemRated,var(--goldRating))}
