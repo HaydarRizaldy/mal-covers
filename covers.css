@@ -1,5 +1,5 @@
 @charset "UTF-8";
-/* Sharper covers + theme extras for MAL user _HyZer - 576 covers, built 2026-11-10 by github.com/HaydarRizaldy/mal-covers */
+/* Sharper covers + theme extras for MAL user _HyZer - 576 covers, built 2026-11-11 by github.com/HaydarRizaldy/mal-covers */
 .data.image a[href^="/anime/57/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/11/11636.webp)}
 .data.image a[href^="/anime/199/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/6/79597.webp)}
 .data.image a[href^="/anime/226/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/1780/121555.webp)}
@@ -693,12 +693,13 @@ body #status-menu.fixed .search-container{opacity:1;translate:none;top:10px}
 body .data.image::before{opacity:calc(var(--progOn,0) * .95);background:linear-gradient(to right,hsl(var(--statusColor,var(--accent))) var(--prog,100%),hsla(var(--text),.18) var(--prog,100%))}
 body [data-query*='"status":7'] .data.image::before{opacity:.95}
 /* special tags: gold trophy badge for Award-winning (top-right, beside the favourite ribbon, hidden on hover like
-   it), soft rose glow around Heart-touching cards */
-body .data.tags span a[href$="tag=Award-winning"]{position:absolute;z-index:10;right:32px;top:calc(-51px + 6px);width:24px;height:24px;min-height:0;padding:0;background:hsla(var(--bg),.8);border:1px solid hsla(48,95%,55%,.85);border-radius:50%;box-shadow:0 0 8px hsla(48,95%,55%,.45);color:hsl(48,95%,58%) !important;font-size:0 !important;text-align:center;text-shadow:none;opacity:1;transition:opacity calc(var(--timeItem) * 1.5) var(--bezierFast)}
-body .data.tags span a[href$="tag=Award-winning"]::before{content:"\f091";font:12px/22px "FontAwesome 4"}
-body .data.tags span a[href$="tag=Award-winning"]::after{content:none}
-body .list-item:not(:has(a[href*="=Favourite"])) .data.tags span a[href$="tag=Award-winning"]{right:4px}
-body .list-item:is(:hover,:focus-within) .data.tags span a[href$="tag=Award-winning"]{opacity:0;pointer-events:none}
+   it), soft rose glow around Heart-touching cards. The badge is drawn by MAL's empty, hidden status cell (not by the
+   tag link), so "Award-winning" still shows by name in the hover tag list, with a gold trophy icon. */
+body .list-item:has(.data.tags a[href$="tag=Award-winning"]) .data.status{display:block;position:absolute;z-index:11;top:6px;right:32px;width:24px;height:24px;padding:0;background:hsla(var(--bg),.8);border:1px solid hsla(48,95%,55%,.85);border-radius:50%;box-shadow:0 0 8px hsla(48,95%,55%,.45);opacity:1;pointer-events:none;transition:opacity calc(var(--timeItem) * 1.5) var(--bezierFast)}
+body .list-item:has(.data.tags a[href$="tag=Award-winning"]) .data.status::before{content:"\f091";display:block;color:hsl(48,95%,58%);font:12px/22px "FontAwesome 4";text-align:center;text-shadow:none}
+body .list-item:not(:has(a[href*="=Favourite"])):has(.data.tags a[href$="tag=Award-winning"]) .data.status{right:4px}
+body .list-item:is(:hover,:focus-within):has(.data.tags a[href$="tag=Award-winning"]) .data.status{opacity:0}
+body .data.tags span a[href$="tag=Award-winning"]::after{content:"\f091";color:hsl(48,95%,58%)}
 body .list-item:has(.data.tags a[href$="tag=Heart-touching"]) .data.image{box-shadow:0 0 0 1px hsla(345,85%,72%,.55),0 0 16px 2px hsla(345,85%,66%,.4)}
 /* hover info: tighter tag rows (19px -> 16px) so up to 11 tags clear the title */
 body .data.tags span a{margin-bottom:1px}
