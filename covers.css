@@ -1,5 +1,5 @@
 @charset "UTF-8";
-/* Sharper covers + theme extras for MAL user _HyZer - 576 covers, built 2026-11-11 by github.com/HaydarRizaldy/mal-covers */
+/* Sharper covers + theme extras for MAL user _HyZer - 576 covers, built 2026-11-18 by github.com/HaydarRizaldy/mal-covers */
 .data.image a[href^="/anime/57/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/11/11636.webp)}
 .data.image a[href^="/anime/199/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/6/79597.webp)}
 .data.image a[href^="/anime/226/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/1780/121555.webp)}
@@ -773,10 +773,9 @@ body.anime #tags-11757~.data.mal_score{--diff:"\2212 3.2 below\A ";--diffColor:v
 body.anime #tags-11827~.data.mal_score{--diff:"\2212 1.4 below\A ";--diffColor:var(--dropped)}
 body.anime #tags-11887~.data.mal_score{--diff:"+1.3 above\A ";--diffColor:var(--current)}
 body.anime #tags-12531~.data.mal_score{--diff:"+1.7 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/12531/"]){--updated:"UPDATED"}
 body.anime #tags-13759~.data.mal_score{--diff:"+2.0 above\A ";--diffColor:var(--current)}
 body.anime #tags-14813~.data.mal_score{--diff:"+2.0 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/14813/"]){--updated:"UPDATED";--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
+.list-item:has(.data.image a[href^="/anime/14813/"]){--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
 body.anime #tags-15451~.data.mal_score{--diff:"\2212 0.5 below\A ";--diffColor:var(--dropped)}
 body.anime #tags-15583~.data.mal_score{--diff:"\2212 2.1 below\A ";--diffColor:var(--dropped)}
 body.anime #tags-16001~.data.mal_score{--diff:"+1.1 above\A ";--diffColor:var(--current)}
@@ -795,7 +794,6 @@ body.anime #tags-23273~.data.mal_score{--diff:"\2212 2.6 below\A ";--diffColor:v
 body.anime #tags-23277~.data.mal_score{--diff:"+0.5 above\A ";--diffColor:var(--current)}
 body.anime #tags-23755~.data.mal_score{--diff:"+0.4 above\A ";--diffColor:var(--current)}
 body.anime #tags-23847~.data.mal_score{--diff:"+1.8 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/23847/"]){--updated:"UPDATED"}
 body.anime #tags-24227~.data.mal_score{--diff:"\2212 1.4 below\A ";--diffColor:var(--dropped)}
 body.anime #tags-24405~.data.mal_score{--diff:"\2212 6.6 below\A ";--diffColor:var(--dropped)}
 body.anime #tags-24475~.data.mal_score{--diff:"\2212 0.1 below\A ";--diffColor:var(--dropped)}
@@ -824,7 +822,6 @@ body.anime #tags-32937~.data.mal_score{--diff:"+0.8 above\A ";--diffColor:var(--
 body.anime #tags-33161~.data.mal_score{--diff:"\2212 1.0 below\A ";--diffColor:var(--dropped)}
 body.anime #tags-33286~.data.mal_score{--diff:"+0.1 above\A ";--diffColor:var(--current)}
 body.anime #tags-33352~.data.mal_score{--diff:"+1.3 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/33352/"]){--updated:"UPDATED"}
 body.anime #tags-33487~.data.mal_score{--diff:"+0.2 above\A ";--diffColor:var(--current)}
 body.anime #tags-34134~.data.mal_score{--diff:"+2.5 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/34134/"]){--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
@@ -845,7 +842,7 @@ body.anime #tags-36871~.data.mal_score{--diff:"+0.3 above\A ";--diffColor:var(--
 body.anime #tags-36882~.data.mal_score{--diff:"+0.3 above\A ";--diffColor:var(--current)}
 body.anime #tags-36885~.data.mal_score{--diff:"+1.6 above\A ";--diffColor:var(--current)}
 body.anime #tags-37021~.data.mal_score{--diff:"+4.3 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/37021/"]){--updated:"UPDATED";--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
+.list-item:has(.data.image a[href^="/anime/37021/"]){--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
 body.anime #tags-37210~.data.mal_score{--diff:"+0.2 above\A ";--diffColor:var(--current)}
 body.anime #tags-37347~.data.mal_score{--diff:"+0.8 above\A ";--diffColor:var(--current)}
 body.anime #tags-37450~.data.mal_score{--diff:"\2212 0.2 below\A ";--diffColor:var(--dropped)}
@@ -864,7 +861,6 @@ body.anime #tags-38778~.data.mal_score{--diff:"\2212 0.7 below\A ";--diffColor:v
 body.anime #tags-39326~.data.mal_score{--diff:"\2212 0.5 below\A ";--diffColor:var(--dropped)}
 body.anime #tags-39535~.data.mal_score{--diff:"+1.7 above\A ";--diffColor:var(--current)}
 body.anime #tags-39547~.data.mal_score{--diff:"+1.6 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/39547/"]){--updated:"UPDATED"}
 body.anime #tags-39587~.data.mal_score{--diff:"+1.7 above\A ";--diffColor:var(--current)}
 body.anime #tags-39701~.data.mal_score{--diff:"+0.5 above\A ";--diffColor:var(--current)}
 body.anime #tags-39783~.data.mal_score{--diff:"\2212 1.0 below\A ";--diffColor:var(--dropped)}
@@ -954,7 +950,6 @@ body.anime #tags-52347~.data.mal_score{--diff:"\2212 2.1 below\A ";--diffColor:v
 body.anime #tags-52367~.data.mal_score{--diff:"+2.8 above\A ";--diffColor:var(--current)}
 .list-item:has(.data.image a[href^="/anime/52367/"]){--topLabel:"\f219  HIDDEN GEM";--gemRated:var(--accent);--gemToggle:visible}
 body.anime #tags-52578~.data.mal_score{--diff:"+1.8 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/52578/"]){--updated:"UPDATED"}
 body.anime #tags-52741~.data.mal_score{--diff:"+1.3 above\A ";--diffColor:var(--current)}
 body.anime #tags-52830~.data.mal_score{--diff:"\2212 0.3 below\A ";--diffColor:var(--dropped)}
 body.anime #tags-52865~.data.mal_score{--diff:"\2212 0.9 below\A ";--diffColor:var(--dropped)}
@@ -980,7 +975,6 @@ body.anime #tags-54855~.data.mal_score{--diff:"\2212 6.3 below\A ";--diffColor:v
 body.anime #tags-54857~.data.mal_score{--diff:"+1.6 above\A ";--diffColor:var(--current)}
 body.anime #tags-55129~.data.mal_score{--diff:"+0.1 above\A ";--diffColor:var(--current)}
 body.anime #tags-55690~.data.mal_score{--diff:"+1.3 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/55690/"]){--updated:"UPDATED"}
 body.anime #tags-55749~.data.mal_score{--diff:"+0.6 above\A ";--diffColor:var(--current)}
 body.anime #tags-55818~.data.mal_score{--diff:"\2212 0.5 below\A ";--diffColor:var(--dropped)}
 body.anime #tags-55887~.data.mal_score{--diff:"\2212 0.1 below\A ";--diffColor:var(--dropped)}
@@ -996,7 +990,6 @@ body.anime #tags-57611~.data.mal_score{--diff:"+0.9 above\A ";--diffColor:var(--
 body.anime #tags-57876~.data.mal_score{--diff:"+0.6 above\A ";--diffColor:var(--current)}
 body.anime #tags-57969~.data.mal_score{--diff:"\2212 0.9 below\A ";--diffColor:var(--dropped)}
 body.anime #tags-58272~.data.mal_score{--diff:"+0.3 above\A ";--diffColor:var(--current)}
-.list-item:has(.data.image a[href^="/anime/58272/"]){--updated:"UPDATED"}
 body.anime #tags-58449~.data.mal_score{--diff:"+0.1 above\A ";--diffColor:var(--current)}
 body.anime #tags-58567~.data.mal_score{--diff:"+0.5 above\A ";--diffColor:var(--current)}
 body.anime #tags-59135~.data.mal_score{--diff:"+0.3 above\A ";--diffColor:var(--current)}
