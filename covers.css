@@ -1,5 +1,5 @@
 @charset "UTF-8";
-/* Sharper covers + theme extras for MAL user _HyZer - 576 covers, built 2026-11-18 by github.com/HaydarRizaldy/mal-covers */
+/* Sharper covers + theme extras for MAL user _HyZer - 576 covers, built 2026-11-19 by github.com/HaydarRizaldy/mal-covers */
 .data.image a[href^="/anime/57/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/11/11636.webp)}
 .data.image a[href^="/anime/199/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/6/79597.webp)}
 .data.image a[href^="/anime/226/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/1780/121555.webp)}
@@ -528,7 +528,7 @@
 .data.image a[href^="/anime/59632/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/1323/149460.webp)}
 .data.image a[href^="/anime/59730/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/1897/149800.webp)}
 .data.image a[href^="/anime/59845/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/1744/150433.webp)}
-.data.image a[href^="/anime/59928/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/1944/159799.webp)}
+.data.image a[href^="/anime/59928/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/1953/161238.webp)}
 .data.image a[href^="/anime/60326/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/1887/150496.webp)}
 .data.image a[href^="/anime/60489/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/1182/149879.webp)}
 .data.image a[href^="/anime/60510/"]{background-image:url(https://cdn.myanimelist.net/r/320x452/images/anime/1833/146951.webp)}
@@ -814,7 +814,7 @@ body.anime #tags-30503~.data.mal_score{--diff:"+0.9 above\A ";--diffColor:var(--
 body.anime #tags-30727~.data.mal_score{--diff:"+1.2 above\A ";--diffColor:var(--current)}
 body.anime #tags-30831~.data.mal_score{--diff:"\2212 0.1 below\A ";--diffColor:var(--dropped)}
 body.anime #tags-30885~.data.mal_score{--diff:"\2212 0.8 below\A ";--diffColor:var(--dropped)}
-body.anime #tags-31240~.data.mal_score{--diff:"+1.8 above\A ";--diffColor:var(--current)}
+body.anime #tags-31240~.data.mal_score{--diff:"+1.7 above\A ";--diffColor:var(--current)}
 body.anime #tags-31722~.data.mal_score{--diff:"+0.1 above\A ";--diffColor:var(--current)}
 body.anime #tags-32182~.data.mal_score{--diff:"+1.5 above\A ";--diffColor:var(--current)}
 body.anime #tags-32380~.data.mal_score{--diff:"+0.2 above\A ";--diffColor:var(--current)}
