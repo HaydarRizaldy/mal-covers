@@ -142,8 +142,9 @@ body .list-table .list-table-header .header-title.number::before{content:"\\f004
 body .list-table .list-table-header .header-title.status::before{content:"Default order";background:hsla(var(--accent),calc(.22 - .22 * var(--F)));border-left-color:hsla(var(--accent),calc(1 - var(--F)))}
 body .list-table .list-table-header .header-title.status{border-bottom:1px solid hsla(var(--text),.12)}
 body .list-table .list-table-header .header-title:is(.number,.status):hover::before{background:hsla(var(--btnLight));border-left-color:hsl(var(--btnAccent))}
-body .data.title .link{font-size:calc(13px - 13px * var(--E) * var(--hasEn,0)) !important}
+body .data.title .link{font-size:calc(13px - 13px * var(--hasEn,0)) !important}
 body .data.title .link::before{content:var(--tEn,"");font-size:calc(13px * var(--E))}
+body .data.title .link::after{content:var(--tJp,"");font-size:calc(13px - 13px * var(--E))}
 body .list-unit .list-status-title .stats{display:block}
 body .list-unit .list-status-title .stats{display:block}
 body .list-unit .list-status-title .stats #show-stats-button{position:absolute;top:0;left:calc(178px + 0.07 * (var(--listW) - 980px));display:flex !important;align-items:stretch;width:calc(94px + 0.035 * (var(--listW) - 980px));height:32px;padding:0;margin:0;background:linear-gradient(225deg,hsla(var(--btnLight)) 20px,hsl(var(--btn)) 20px) hsl(var(--btn)) !important;border:2px solid hsl(var(--btn));border-radius:3px;box-shadow:-0.5px 0.7px 2.1px hsla(0,0%,0%,35%);font-size:0;isolation:isolate;overflow:hidden;gap:0;cursor:pointer;transition:border-color var(--timeButton) var(--bezierFast)}
@@ -335,11 +336,12 @@ def main():
                     props.append(f'--airs:"\\f017  {airs}"')
             if props:
                 per_entry.append(f".list-item:has({link}){{{';'.join(props)}}}")
-            # English title for the ENG/JP slider (targets the title link directly: no :has needed)
+            # ENG/JP titles for the slider: both come from the anonymous feed, so JP stays romaji even when
+            # the owner's MAL title-language setting renders the page's own title text in English
             jp = str(it.get(f"{kind}_title") or "").strip()
             en = str(it.get("anime_title_eng" if kind == "anime" else "manga_english") or "").strip()
             if en and en != jp:
-                titles.append(f'.data.title a[href^="/{kind}/{it[kind + "_id"]}/"]{{--tEn:{css_string(en)};--hasEn:1}}')
+                titles.append(f'.data.title a[href^="/{kind}/{it[kind + "_id"]}/"]{{--tEn:{css_string(en)};--tJp:{css_string(jp)};--hasEn:1}}')
         scored = [it["score"] for it in items if it.get("score")]
         chart, counts = score_chart(scored)
         st = stats_text(kind)
