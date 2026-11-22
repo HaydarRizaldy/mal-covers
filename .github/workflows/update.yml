@@ -5,7 +5,7 @@ on:
     - cron: "17 20 * * *"   # daily, 03:17 WIB
   workflow_dispatch:         # "Run workflow" button for an instant refresh
   push:
-    paths: [generate.py, .github/workflows/update.yml]
+    paths: [generate.py, theme.css, .github/workflows/update.yml]
 
 permissions:
   contents: write

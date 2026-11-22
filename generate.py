@@ -12,6 +12,7 @@ Usage: python generate.py [username] [output]   (stdlib only)
 """
 import html
 import json
+import os
 import re
 import sys
 import time
@@ -21,6 +22,7 @@ from datetime import datetime, timezone
 
 USER = sys.argv[1] if len(sys.argv) > 1 else "_HyZer"
 OUT = sys.argv[2] if len(sys.argv) > 2 else "covers.css"
+THEME = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "theme.css"), encoding="utf-8").read()
 SIZE = "r/320x452"  # ~1.5x the 210x300 card; ~21 KB WebP. Use "" (original l-size) for full 2x.
 PAGE = 300  # MAL's load.json page size
 UPDATED_DAYS = 7  # entries changed within this many days get an "UPDATED" chip (anime only: manga has no updated_at)
@@ -127,8 +129,9 @@ body .list-unit .loading-space{pointer-events:none}
    pending day-long transition is heading to, the browser would keep that transition and never apply the click): each click rule makes only ITS property instant and keeps the other's
    day-long delay listed, so switching language never resets favourites-first (and vice versa) */
 body{--en:0;--fav:0;transition:--en 0s 86400s,--fav 0s 86400s}
-/* effective on/off values (an explicit OFF is stored as -1, see above) */
-body{--E:max(var(--en),0);--F:max(var(--fav),0)}
+/* effective on/off values (an explicit OFF is stored as -1, see above). Language defaults to ENG (the owner's
+   MAL shows English titles): --E is 1 until the JP half has been clicked (-1). */
+body{--E:calc(1 - max(-1 * var(--en),0));--F:max(var(--fav),0)}
 body:has(#show-stats-button:active){--en:-1;transition:--en 0s,--fav 0s 86400s}
 body:has(#show-stats-button i:active){--en:1;transition:--en 0s,--fav 0s 86400s}
 /* favourites-first, chosen from the Order menu: Brink-hidden header cells reused as two menu items
@@ -187,6 +190,13 @@ body #status-menu.fixed~.list-block .list-unit::before{opacity:1}
 body #status-menu.fixed::after{opacity:0}
 /* search box stays in the sticky tab bar when scrolled (Brink fades it out), level with the tabs */
 body #status-menu.fixed .search-container{opacity:1;translate:none}
+/* cinematic banner: shorter than Brink's 30vw, framed a little higher, with the owner's name and headline stats
+   (--bannerStats, per list) over a bottom fade into the page */
+body #cover-image-container{height:clamp(190px,17vw,330px) !important;min-height:0 !important;max-height:none !important}
+body #cover-image{object-position:50% 28%}
+body .list-block{min-height:calc(100vh - (42px + clamp(190px,17vw,330px))) !important}
+body #cover-image-container::before{content:var(--bannerName,none);position:absolute;left:max(16px,calc(50% - var(--listW) / 2 + 28px));bottom:50px;z-index:3;color:#fff;font:bold clamp(28px,2.6vw,40px)/1 var(--font);letter-spacing:1px;text-shadow:0 2px 14px hsla(0,0%,0%,.75);pointer-events:none}
+body #cover-image-container::after{content:var(--bannerStats,"");display:flex;align-items:flex-end;box-sizing:border-box;padding:0 16px 20px max(18px,calc(50% - var(--listW) / 2 + 30px));color:hsla(0,0%,100%,.9);font:14px/1.3 var(--font);letter-spacing:.5px;white-space:pre-wrap;text-shadow:0 1px 8px hsla(0,0%,0%,.8);background:linear-gradient(to top,hsla(var(--bg),.8),hsla(var(--bg),0) 60%),radial-gradient(ellipse farthest-corner at center top,transparent 66.6667%,hsla(var(--bg),var(--bannerVignetteOpacity)))}
 /* the bar freezes as one aligned row. Brink stuck the tabs at 0 and Order at 22px but the flags + Filters row
    (.stats) at 43px, then MAL's script added .fixed (in the owner's 75%-zoomed browser ~700px late) and
    everything snapped to new offsets, so for that stretch Filters / Order / flags sat 21px below the tabs.
@@ -241,9 +251,27 @@ body .data.title::before{content:var(--airs,none);position:absolute;left:12px;bo
 body .list-unit .list-stats{height:auto !important;overflow:visible !important;padding-top:0 !important;padding-bottom:0 !important;margin-top:0 !important;margin-bottom:0 !important}
 @media (max-width:926px){body .list-block{padding-top:152px;padding-bottom:80px}body .list-unit .list-status-title .text{left:calc(238px - 50vw);width:calc(100vw - 40px)}
 body .list-unit .list-status-title .stats #show-stats-button{left:186px;width:98px}body #status-menu .search-container{left:calc(50% + 75px);width:143px}
-body #status-menu.fixed~.list-block .list-unit .list-status-title .stats #show-stats-button{left:calc(258px - 50vw + 8px)}body #status-menu.fixed .status-menu{width:min(560px,calc(100vw - 310px)) !important}body #status-menu.fixed .status-button{padding:0 5px}body #status-menu.fixed .status-button::before{font-size:14px}body #status-menu.fixed .search-container{top:10px;left:auto;right:8px;width:min(143px,calc((100vw - min(560px,100vw - 310px)) / 2 - 16px))}}
-@media (max-width:926px){@container style(--stuck:1){body #status-menu:not(.u)~.list-block #advanced-options-button{opacity:0;pointer-events:none}
-body #status-menu:not(.u)~.list-block .list-unit .list-status-title .stats #show-stats-button{left:calc(258px - 50vw + 8px)}body #status-menu:not(.u) .status-menu{width:min(560px,calc(100vw - 310px)) !important}body #status-menu:not(.u) .status-button{padding:0 5px}body #status-menu:not(.u) .status-button::before{font-size:14px}body #status-menu:not(.u){padding:5px 0}body #status-menu:not(.u) .search-container{top:10px;left:auto;right:8px;width:min(143px,calc((100vw - min(560px,100vw - 310px)) / 2 - 16px))}}}"""
+body #status-menu.fixed .status-button{padding:0 5px}body #status-menu.fixed .status-button::before{font-size:14px}
+@supports not (animation-timeline:view()){body #status-menu.fixed~.list-block .list-unit .list-status-title .stats #show-stats-button{left:calc(258px - 50vw + 8px)}body #status-menu.fixed .status-menu{width:min(560px,calc(100vw - 310px)) !important}body #status-menu.fixed .search-container{top:10px;left:auto;right:8px;width:min(143px,calc((100vw - min(560px,100vw - 310px)) / 2 - 16px))}}}
+/* <=926px docking (scroll-driven): the second row (Filters, Order, flags, search) rises 1:1 with the page into the
+   tab row. Filters and Order fade out over the first 15px (before the flags slide across them); over 30px the tabs narrow and the flags / search slide out to
+   their slots, so they are in place before the rows meet at 52px (the search, inside the frozen bar, keeps
+   rising through its own top from 12px on). */
+@media (max-width:926px){@container style(--stuck:1){body #status-menu:not(.u)~.list-block #advanced-options-button,body #status-menu:not(.u)~.list-block .list-table>tbody:first-of-type{pointer-events:none}
+body #status-menu:not(.u) .status-button{padding:0 5px}body #status-menu:not(.u) .status-button::before{font-size:14px}}}
+@supports (animation-timeline:view()){@media (max-width:926px){
+body #status-menu,body #status-menu.fixed{top:-12px;padding:17px 0 0}
+body .list-unit .list-status-title .stats,body .list-table>tbody:first-of-type::before{top:10px}
+body #status-menu .status-menu,body .list-unit .list-status-title .stats #show-stats-button,body #advanced-options-button,body .list-table>tbody:first-of-type{animation:hz-dock linear both;animation-timeline:--hzBar;animation-range:exit-crossing 0px exit-crossing 30px}
+body #status-menu .status-menu{animation-name:hz-dock-tabs}
+body .list-unit .list-status-title .stats #show-stats-button{animation-name:hz-dock-flags}
+body #advanced-options-button,body .list-table>tbody:first-of-type{animation-name:hz-dock-fade;animation-range:exit-crossing 0px exit-crossing 15px}
+body #status-menu .search-container{animation:hz-dock-search-x linear both,hz-dock-search-y linear both;animation-timeline:--hzBar,--hzBar;animation-range:exit-crossing 0px exit-crossing 30px,exit-crossing 12px exit-crossing 52px}}
+@keyframes hz-dock-tabs{to{width:min(560px,calc(100vw - 310px))}}
+@keyframes hz-dock-flags{to{left:calc(258px - 50vw + 8px)}}
+@keyframes hz-dock-fade{to{opacity:0}}
+@keyframes hz-dock-search-x{to{left:calc(100% - 8px - min(143px,calc((100vw - min(560px,100vw - 310px)) / 2 - 16px)));width:min(143px,calc((100vw - min(560px,100vw - 310px)) / 2 - 16px))}}
+@keyframes hz-dock-search-y{to{top:22px}}}"""
 
 
 def get(url, as_json=False):
@@ -295,6 +323,17 @@ def stats_text(kind):
     for short, full in ((r"\bSpcl\.", "Specials"), (r"\bEps\b", "Episodes"), (r"\bDev\.", "Deviation")):
         text = re.sub(short, full, text)
     return text or None
+
+
+def banner_stats(st, entries):
+    """Headline numbers for the banner, e.g. 'Mean score 7.6   •   40.98 days   •   541 entries' (zeros left out)."""
+    parts = []
+    for pattern, fmt in ((r"Mean Score: ([\d.]+)", "Mean score {}"), (r"Days: ([\d.]+)", "{} days")):
+        m = re.search(pattern, st or "")
+        if m and float(m.group(1)):
+            parts.append(fmt.format(m.group(1)))
+    parts.append(f"{entries} entries")
+    return "   \u2022   ".join(parts)
 
 
 def score_chart(scores):
@@ -374,7 +413,10 @@ def main():
         scored = [it["score"] for it in items if it.get("score")]
         chart, counts = score_chart(scored)
         st = stats_text(kind)
-        lists.append(f"body.{kind}{{" + (f"--scoreChart:{chart};--chartLabel:\"Scores 1\\2013 10\"" if scored else "--chartLabel:none") + (f";--statsText:{css_string(st)}" if st else "") + "}")
+        if st and not re.search(r"[1-9]", st):
+            st = None  # all zeros (e.g. a manga list with nothing read or scored): show no stats line
+        lists.append(f"body.{kind}{{" + (f"--scoreChart:{chart};--chartLabel:\"Scores 1\\2013 10\"" if scored else "--chartLabel:none") + (f";--statsText:{css_string(st)}" if st else "")
+                     + f";--bannerName:{css_string(USER)};--bannerStats:{css_string(banner_stats(st, len(items)))}" + "}")
         print(f"{kind}: {len(items)} entries, scores 1-10 = {counts}, stats = {st!r}", file=sys.stderr)
         time.sleep(2)
 
@@ -390,6 +432,9 @@ def main():
         + "\n".join(lists) + "\n"
         + "".join(p + "\n" for p in per_entry)
         + "/* English titles for the ENG/JP slider */\n" + "".join(t + "\n" for t in titles)
+        # the theme itself goes last: it used to be pasted into MAL after the covers.css import, so it keeps
+        # winning specificity ties over everything above, exactly as before the move
+        + "/* ---- theme: Brink V2.1.3 + hand edits (theme.css) ---- */\n" + THEME
     )
     old = open(OUT, encoding="utf-8").read() if __import__("os").path.exists(OUT) else ""
     # ignore the header comment (it holds the build date) when deciding whether anything changed
