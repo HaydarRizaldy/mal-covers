@@ -167,7 +167,18 @@ body .list-unit .list-status-title .stats{pointer-events:auto}
 body #status-menu.fixed~.list-block .list-status-title{opacity:1;translate:none}
 body #status-menu.fixed~.list-block .list-status-title .stats{top:10px}
 body #advanced-options-button,body .list-unit .list-status-title .text{transition:opacity var(--timeMenu) var(--bezierFast),color var(--timeText) var(--bezierFast)}
-body #status-menu.fixed~.list-block #advanced-options-button,body #status-menu.fixed~.list-block .list-status-title .text{opacity:0;pointer-events:none}
+body #status-menu.fixed~.list-block .list-status-title .text{opacity:0;pointer-events:none}
+/* Filters and Order stay in the sticky bar too (user request), so the scrolled bar is the same row as the
+   unscrolled one: Filters / Order / flags / tabs / search, all level with the tabs. Brink fades Order out;
+   here its button (tbody::before, sticky) sticks at the tab row and its menu sticks flush under it (top 42px,
+   no gap, so the pointer can move from button to menu without the hover breaking). Centring moves from
+   left:50% to margin-left:50%, because left/top act as sticky thresholds. ≤926px the bar is one tight row,
+   so Filters and Order stay hidden there when scrolled. */
+@media (min-width:927px){
+body #status-menu.fixed~.list-block .list-table>tbody:first-of-type{opacity:1;translate:none}
+body #status-menu.fixed~.list-block .list-table>tbody:first-of-type::before{top:10px}
+body #status-menu.fixed~.list-block .list-table .list-table-header{position:sticky;top:42px;left:auto;margin-left:50%}}
+@media (max-width:926px){body #status-menu.fixed~.list-block #advanced-options-button{opacity:0;pointer-events:none}}
 /* stronger, longer faint fade behind the sticky bar: drawn inside the list's layer (under the slider, over the cards) instead of
    Brink's faint gradient on #status-menu, which painted over the slider */
 body .list-unit::before{content:"";position:fixed;top:0;left:0;right:0;z-index:29;height:120px;background:linear-gradient(to bottom,hsla(var(--bg),.9) 0,hsla(var(--bg),.7) 35%,hsla(var(--bg),.35) 65%,hsla(var(--bg),0) 100%);opacity:0;pointer-events:none;transition:opacity var(--timeMenu) var(--bezierFast)}
