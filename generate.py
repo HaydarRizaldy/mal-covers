@@ -41,6 +41,20 @@ TAG_COLOURS = [("Romance", "#d55181"), ("Comedy", "#d95926"), ("School", "#199e7
 # encoding, so no 9th hue is invented). The first 8 keep their colours (colour follows the tag).
 TAG_RINGS = [("Fantasy", "#3987e5"), ("Harem", "#d95926"), ("Isekai", "#199e70"), ("Supernatural", "#c98500"),
              ("Sci-Fi", "#d55181"), ("Friendship", "#008300"), ("Slice of Life", "#9085e9"), ("Gore", "#e66767")]
+# Banner quote under the name: one per day (the daily Action rebuilds covers.css), same for anime and manga.
+# Edit freely; keep the attribution short so it fits on one line.
+QUOTES = [
+    ("A lesson without pain is meaningless.", "Edward Elric, Fullmetal Alchemist: Brotherhood"),
+    ("People's dreams... never end!", "Marshall D. Teach, One Piece"),
+    ("Fear is not evil. It tells you what your weakness is.", "Gildarts Clive, Fairy Tail"),
+    ("If you win, you live. If you lose, you die. If you don't fight, you can't win!", "Eren Yeager, Attack on Titan"),
+    ("Whatever you lose, you'll find it again. But what you throw away you'll never get back.", "Kenshin Himura, Rurouni Kenshin"),
+    ("Power comes in response to a need, not a desire.", "Goku, Dragon Ball Z"),
+    ("Hard work is worthless for those that don't believe in themselves.", "Naruto Uzumaki, Naruto"),
+    ("Simplicity is the easiest path to true beauty.", "Seishuu Handa, Barakamon"),
+    ("Life is not a game of luck. If you wanna win, work hard.", "Sora, No Game No Life"),
+    ("The world isn't perfect. But it's there for us, doing the best it can.", "Roy Mustang, Fullmetal Alchemist"),
+]
 CHART_FILL = "hsl(243,32%,78%)"  # theme accent (Twilight Indigo lavender); single series -> single hue
 
 # Theme extras that live here instead of the MAL custom CSS (which is near MAL's length cap).
@@ -190,13 +204,13 @@ body #status-menu.fixed~.list-block .list-unit::before{opacity:1}
 body #status-menu.fixed::after{opacity:0}
 /* search box stays in the sticky tab bar when scrolled (Brink fades it out), level with the tabs */
 body #status-menu.fixed .search-container{opacity:1;translate:none}
-/* cinematic banner: shorter than Brink's 30vw, framed a little higher, with the owner's name and headline stats
-   (--bannerStats, per list) over a bottom fade into the page */
+/* cinematic banner: shorter than Brink's 30vw, framed a little higher, with the owner's name and the day's quote
+   (--bannerQuote: quote, line break, attribution) over a bottom fade into the page */
 body #cover-image-container{height:clamp(190px,17vw,330px) !important;min-height:0 !important;max-height:none !important}
 body #cover-image{object-position:50% 28%}
 body .list-block{min-height:calc(100vh - (42px + clamp(190px,17vw,330px))) !important}
-body #cover-image-container::before{content:var(--bannerName,none);position:absolute;left:max(16px,calc(50% - var(--listW) / 2 + 28px));bottom:50px;z-index:3;color:#fff;font:bold clamp(28px,2.6vw,40px)/1 var(--font);letter-spacing:1px;text-shadow:0 2px 14px hsla(0,0%,0%,.75);pointer-events:none}
-body #cover-image-container::after{content:var(--bannerStats,"");display:flex;align-items:flex-end;box-sizing:border-box;padding:0 16px 20px max(18px,calc(50% - var(--listW) / 2 + 30px));color:hsla(0,0%,100%,.9);font:14px/1.3 var(--font);letter-spacing:.5px;white-space:pre-wrap;text-shadow:0 1px 8px hsla(0,0%,0%,.8);background:linear-gradient(to top,hsla(var(--bg),.8),hsla(var(--bg),0) 60%),radial-gradient(ellipse farthest-corner at center top,transparent 66.6667%,hsla(var(--bg),var(--bannerVignetteOpacity)))}
+body #cover-image-container::before{content:var(--bannerName,none);position:absolute;left:max(16px,calc(50% - var(--listW) / 2 + 28px));bottom:66px;z-index:3;color:#fff;font:bold clamp(28px,2.6vw,40px)/1 var(--font);letter-spacing:1px;text-shadow:0 2px 14px hsla(0,0%,0%,.75);pointer-events:none}
+body #cover-image-container::after{content:var(--bannerQuote,"");display:flex;align-items:flex-end;box-sizing:border-box;padding:0 16px 14px max(18px,calc(50% - var(--listW) / 2 + 30px));color:hsla(0,0%,100%,.88);font:italic 14px/1.45 var(--font);letter-spacing:.3px;text-align:left;white-space:pre-wrap;text-shadow:0 1px 8px hsla(0,0%,0%,.8);background:linear-gradient(to top,hsla(var(--bg),.8),hsla(var(--bg),0) 60%),radial-gradient(ellipse farthest-corner at center top,transparent 66.6667%,hsla(var(--bg),var(--bannerVignetteOpacity)))}
 /* the bar freezes as one aligned row. Brink stuck the tabs at 0 and Order at 22px but the flags + Filters row
    (.stats) at 43px, then MAL's script added .fixed (in the owner's 75%-zoomed browser ~700px late) and
    everything snapped to new offsets, so for that stretch Filters / Order / flags sat 21px below the tabs.
@@ -325,15 +339,10 @@ def stats_text(kind):
     return text or None
 
 
-def banner_stats(st, entries):
-    """Headline numbers for the banner, e.g. 'Mean score 7.6   •   40.98 days   •   541 entries' (zeros left out)."""
-    parts = []
-    for pattern, fmt in ((r"Mean Score: ([\d.]+)", "Mean score {}"), (r"Days: ([\d.]+)", "{} days")):
-        m = re.search(pattern, st or "")
-        if m and float(m.group(1)):
-            parts.append(fmt.format(m.group(1)))
-    parts.append(f"{entries} entries")
-    return "   \u2022   ".join(parts)
+def banner_quote():
+    """Today's quote as CSS strings: the quote, a line break, then the attribution."""
+    text, who = QUOTES[datetime.now(timezone.utc).toordinal() % len(QUOTES)]
+    return f'{css_string(chr(0x201C) + text + chr(0x201D))} "\\A " {css_string(chr(0x2014) + " " + who)}'
 
 
 def score_chart(scores):
@@ -416,7 +425,7 @@ def main():
         if st and not re.search(r"[1-9]", st):
             st = None  # all zeros (e.g. a manga list with nothing read or scored): show no stats line
         lists.append(f"body.{kind}{{" + (f"--scoreChart:{chart};--chartLabel:\"Scores 1\\2013 10\"" if scored else "--chartLabel:none") + (f";--statsText:{css_string(st)}" if st else "")
-                     + f";--bannerName:{css_string(USER)};--bannerStats:{css_string(banner_stats(st, len(items)))}" + "}")
+                     + f";--bannerName:{css_string(USER)};--bannerQuote:{banner_quote()}" + "}")
         print(f"{kind}: {len(items)} entries, scores 1-10 = {counts}, stats = {st!r}", file=sys.stderr)
         time.sleep(2)
 
