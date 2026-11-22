@@ -720,7 +720,34 @@ body .list-unit::before{content:"";position:fixed;top:0;left:0;right:0;z-index:2
 body #status-menu.fixed~.list-block .list-unit::before{opacity:1}
 body #status-menu.fixed::after{opacity:0}
 /* search box stays in the sticky tab bar when scrolled (Brink fades it out), level with the tabs */
-body #status-menu.fixed .search-container{opacity:1;translate:none;top:10px}
+body #status-menu.fixed .search-container{opacity:1;translate:none}
+/* the bar freezes as one aligned row. Brink stuck the tabs at 0 and Order at 22px but the flags + Filters row
+   (.stats) at 43px, then MAL's script added .fixed (in the owner's 75%-zoomed browser ~700px late) and
+   everything snapped to new offsets, so for that stretch Filters / Order / flags sat 21px below the tabs.
+   >=927px: every control now rides up with the page and freezes in the same pixel, centred on y26: the bar
+   sticks at -12px with its padding unchanged, .stats and the Order button stick at 10px. The look of the stuck
+   state (fade, title line hidden, Order menu sticky) follows --stuck, which a scroll-driven animation flips
+   to 1 at that same pixel (.list-block's top = the bar's natural spot, 12px past the top of the window);
+   <=926px the bar changes from two rows to one, so it snaps there at the moment the bar sticks. The .fixed
+   rules are repeated under a style query on --stuck with :not(.u) standing in for .fixed (same specificity).
+   Browsers without scroll timelines or style queries (Firefox) keep MAL's .fixed timing. */
+@property --stuck{syntax:'<integer>';inherits:true;initial-value:0}
+@keyframes hz-stuck{from{--stuck:0}to{--stuck:1}}
+html{timeline-scope:--hzBar;animation:hz-stuck linear both;animation-timeline:--hzBar;animation-range:exit-crossing 12px exit-crossing 13px}
+body .list-block{view-timeline:--hzBar block}
+@media (min-width:927px){
+body #status-menu,body #status-menu.fixed{top:-12px;padding:17px 0 0}
+body .list-unit .list-status-title .stats,body .list-table>tbody:first-of-type::before{top:10px}}
+@media (max-width:926px){html{animation-range:exit-crossing 0px exit-crossing 1px}}
+@container style(--stuck:1){
+body #status-menu:not(.u)~.list-block .list-status-title{opacity:1;translate:none}
+body #status-menu:not(.u)~.list-block .list-status-title .stats{top:10px}
+body #status-menu:not(.u)~.list-block .list-status-title .text{opacity:0;pointer-events:none}
+body #status-menu:not(.u)~.list-block .list-unit::before{opacity:1}
+body #status-menu:not(.u) .search-container{opacity:1;translate:none}}
+@media (min-width:927px){@container style(--stuck:1){
+body #status-menu:not(.u)~.list-block .list-table>tbody:first-of-type{opacity:1;translate:none}
+body #status-menu:not(.u)~.list-block .list-table .list-table-header{position:sticky;top:42px;left:auto;margin-left:50%}}}
 /* special tags: gold trophy badge for Award-winning (top-right; on favourite cards stacked under the ribbon; hidden
    on hover like it), soft rose glow around Heart-touching cards. The badge is drawn by MAL's empty, hidden status cell (not by the
    tag link), so "Award-winning" still shows by name in the hover tag list, with a gold trophy icon. */
@@ -748,7 +775,9 @@ body .data.title::before{content:var(--airs,none);position:absolute;left:12px;bo
 body .list-unit .list-stats{height:auto !important;overflow:visible !important;padding-top:0 !important;padding-bottom:0 !important;margin-top:0 !important;margin-bottom:0 !important}
 @media (max-width:926px){body .list-block{padding-top:152px;padding-bottom:80px}body .list-unit .list-status-title .text{left:calc(238px - 50vw);width:calc(100vw - 40px)}
 body .list-unit .list-status-title .stats #show-stats-button{left:186px;width:98px}body #status-menu .search-container{left:calc(50% + 75px);width:143px}
-body #status-menu.fixed~.list-block .list-unit .list-status-title .stats #show-stats-button{left:calc(258px - 50vw + 8px)}body #status-menu.fixed .status-menu{width:min(560px,calc(100vw - 310px)) !important}body #status-menu.fixed .status-button{padding:0 5px}body #status-menu.fixed .status-button::before{font-size:14px}body #status-menu.fixed .search-container{left:auto;right:8px;width:min(143px,calc((100vw - min(560px,100vw - 310px)) / 2 - 16px))}}
+body #status-menu.fixed~.list-block .list-unit .list-status-title .stats #show-stats-button{left:calc(258px - 50vw + 8px)}body #status-menu.fixed .status-menu{width:min(560px,calc(100vw - 310px)) !important}body #status-menu.fixed .status-button{padding:0 5px}body #status-menu.fixed .status-button::before{font-size:14px}body #status-menu.fixed .search-container{top:10px;left:auto;right:8px;width:min(143px,calc((100vw - min(560px,100vw - 310px)) / 2 - 16px))}}
+@media (max-width:926px){@container style(--stuck:1){body #status-menu:not(.u)~.list-block #advanced-options-button{opacity:0;pointer-events:none}
+body #status-menu:not(.u)~.list-block .list-unit .list-status-title .stats #show-stats-button{left:calc(258px - 50vw + 8px)}body #status-menu:not(.u) .status-menu{width:min(560px,calc(100vw - 310px)) !important}body #status-menu:not(.u) .status-button{padding:0 5px}body #status-menu:not(.u) .status-button::before{font-size:14px}body #status-menu:not(.u){padding:5px 0}body #status-menu:not(.u) .search-container{top:10px;left:auto;right:8px;width:min(143px,calc((100vw - min(560px,100vw - 310px)) / 2 - 16px))}}}
 /* tag colours (icon only) */
 body .data.tags span a[href$="tag=Romance"]::after{color:#d55181}
 body .data.tags span a[href$="tag=Comedy"]::after{color:#d95926}
